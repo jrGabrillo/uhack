@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta http-equiv="pragma" content="no-cache">
+        <meta name="msapplication-tap-highlight" content="no">
+        <title>Uhack</title>
+
+        <link rel="icon" href="../assets/images/icon/favicon.ico" sizes="32x32">
+        <meta name="msapplication-TileColor" content="#00bcd4">
+        <link href="../assets/css/cropper.min.css" type="text/css" rel="stylesheet" media="screen,projection">
+        <link href="../assets/css/font-awesome.min.css" type="text/css" rel="stylesheet" media="screen,projection">
+        <link href="../assets/css/plugins/dataTables/dataTables.responsive.css" type="text/css" rel="stylesheet" media="screen,projection">
+        <link href="../assets/css/plugins/dataTables/dataTables.tableTools.min.css" type="text/css" rel="stylesheet" media="screen,projection">
+        <link href="../assets/css/plugins/dataTables/dataTables.material.min.css" type="text/css" rel="stylesheet" media="screen,projection">
+        <link href="../assets/css/perfect-scrollbar.css" type="text/css" rel="stylesheet" media="screen,projection">
+        <link href="../assets/css/original.materialize.min.css" rel="stylesheet">
+        <link href="../assets/css/custom.css" rel="stylesheet">
+        <link href="../assets/css/style.css" rel="stylesheet">
+        <link href="../assets/css/animate.css" rel="stylesheet">
+    </head>
+
+    <body>
+        <header>
+        </header>
+        <main>
+            <div id='block-control' class=''></div>
+            <div class="progress hide-on-med-and-up hide-on-med-and-down" style="margin: 0rem 0 1rem 0;">
+                <div class="indeterminate"></div>
+            </div>
+            <div id="loader-wrapper">
+                <div id="loader"></div>        
+                <div class="loader-section section-left"></div>
+                <div class="loader-section section-right"></div>
+            </div>
+            <div class="wrapper rightside-navigation" id="content">
+            </div>
+            <div id="modal" class="modal bottom-sheet" style="max-height:80%;">
+                <div class="modal-content"></div>
+                <div class="modal-footer"></div>
+            </div>
+            <div id="modal_popUp" class="modal">
+                <div class="modal-content"></div>
+                <div class="modal-footer"></div>
+            </div>
+            <div id="modal_confirm" class="modal modal-fixed-footer">
+                <div class="modal-content"></div>
+                <div class="modal-footer"></div>
+            </div>
+        </main>
+        <footer class="page-footer grey lighten-1">
+            <div class="footer-copyright">
+                <div class="container">
+                    <span>Copyright © 2017. RNR Digital Consultancy.</span>
+                    <span class="right"> Design and Developed by <b><a class="white-text" href='https://rnrdigitalconsultancy.com'>RNR Digital Consultancy</a></b></span>
+                </div>
+            </div>
+        </footer>
+        <script src="../assets/js/jquery.js"></script>    
+        <script src="../assets/js/app.js"></script>
+        <script src="../assets/js/materialize.min.js"></script>
+        <script src="../assets/js/typehead.bundle.min.js"></script>
+        <script src="../assets/js/papaparse.js"></script>
+        <script src="../assets/js/codemirror.min.js"></script>
+        <script src="../assets/js/jquery.idle.min.js"></script>
+        <script src="../assets/js/validation/jquery.validate.min.js"></script>
+        <script src="../assets/js/validation/additional-methods.min.js"></script>
+        <script src="../assets/js/dataTables/jquery.dataTables.js"></script>
+        <script src="../assets/js/dataTables/dataTables.fixedcolumns.js"></script>
+        <script src="../assets/js/dataTables/dataTables.responsive.js"></script>
+        <script src="../assets/js/dataTables/dataTables.tableTools.min.js"></script>
+        <script src="../assets/js/dataTables/dataTables.material.min.js"></script>
+        <script src="../assets/js/cropper.min.js"></script>
+        <script src="../assets/js/plugins.js"></script>
+        <script src="../assets/js/process.js"></script>
+        <script>
+            system.ini();
+            // login.check();
+            App.init();
+            system.forceLogout(function(){
+                login.kill();
+            });
+        </script>
+    </body>
+</html>

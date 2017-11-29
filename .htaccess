@@ -1,0 +1,11 @@
+DirectoryIndex index.html
+
+<ifModule mod_headers.c>
+    Header set Connection keep-alive
+</ifModule>
+
+RewriteEngine On
+RewriteBase /
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ http://www.rnrdigitalconsultancy.com
