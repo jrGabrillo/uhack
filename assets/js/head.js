@@ -4094,156 +4094,83 @@ sales = {
 		const data = system.html('../assets/harmony/Process.php?get-sales');
 		return data.responseText;
 	},
-	viewOrders:function(data){
-		let subTotal = 0;
-		let status = ["Pending","Place Order","For Delivery","Closed","Canceled"];
-		let statusContent = "";
-		$("#modal table").remove();
-
-		let content = `<thead><tr>
-					  <th class='center'></th>
-					  <th class='center'>Product</th>
-					  <th class='center'>Quantity</th>
-					  <th class='center'>Price</th>
-					  <th class='center'>Total</th>
-				  </tr></thead>`;						
-
-		$.each(data[1],function(i,v){
-			var product = ((v[17] == "") || (v[17] == null))?"default.png":v[17];
-			subTotal = subTotal + (v[10]*v[1]);
-			content += `<tr>
-						  <td class='center'><img src='../assets/images/products/${product}' alt='Thumbnail' class='valign profile-image' width='80px'></td>
-						  <td class='center'>${v[8]}</td>
-						  <td class='center'>${v[1]}</td>
-						  <td class='center'>${v[10]}</td>
-						  <td class='center'>${(v[10]*v[1])}</td>
-					  </tr>`;						
-		});
-
-		for(let s of status){
-			if(s == data[0].meta[3]){
-				statusContent += `<option selected>${s}</option>`;
-			}
-			else{
-				statusContent += `<option>${s}</option>`;
-			}
-		}
-
-		$('#modal .modal-content').html(`<div class='row'>
-											<div class='col s3'>
-												<table>
-													<tr>
-														<td class='bold'>Order ID:</td>
-														<td>${(data[0].meta[0].substring(0,8))}</td>
-													</tr>
-													<tr>
-														<td class='bold'>Order Date:</td>
-														<td>${data[0].meta[1]}</td>
-													</tr>
-													<tr>
-														<td class='bold'>Order Delivered:</td>
-														<td>${data[0].meta[2]}</td>
-													</tr>
-													<tr>
-														<td class='bold'>Status:</td>
-														<td><select id="field_status">${statusContent}</select></td>
-													</tr>
-												</table>
-											</div>
-											<div class='col s9'>
-												<div class='card'>
-													<table class='striped bordered highlight'>${content}
-														<tr><td colspan='4'><strong class='right'>Total</strong></td><td class='center'>${subTotal}</td></tr>
-													</table>
-												</div>
-											</div>`);
-
-	    $("select").material_select();
-		$('#modal').modal('open');
-
-		$("#field_status").on('change',function(){
-			let statusData = $(this).val();
-			sales.updateStatus([data[0].meta[0],statusData]);
-		});
-	},
-	list:function(data){
-		const list = JSON.parse(data);
-		let content = "";
-
-		if(data.length<=0){
-			$("#buyingActivity").html("<h4 class='center'>No buying activity</h4>");
-		}
-		else{
-			$.each(list,function(i,v){
-				profile = (v[17] == "")?'avatar.jpg':v[17];
-				content += `<tr>
-								<td width='1px'>${(i+1)}. </td>
-								<td width='20%' class-'center'>
-									<img src='../assets/images/profile/${profile}' class='circle' width='42px' height='42px'/><br/>
-									<span>${v[9]} ${v[8]}</span>
-								</td>
-								<td width='20%'>${v[0].substring(0,8)}</td>
-								<td width='30%'>${v[2]}</td>
-								<td width='30%'>${v[3]}</td>
-								<td width='30%'>${v[4]}</td>
-								<td width='9%'>
-									<a data-cmd='showOrder' data-node='${v[0]}' data-meta='${JSON.stringify([v[0],v[2],v[3],v[4]])}' class='tooltipped btn-floating waves-effect black-text no-shadow grey lighten-5 right' data-position='left' data-delay='0' data-tooltip='Show details'>
-										<i class='material-icons right hover black-text'>more_vert</i>
-									</a>
-								</td>
-							</tr>`;
-			});
-
-			content = `<table class='display dataTable bordered' width="100%">
-				            <thead>
-				                <tr>	
-				                    <td width='1%'>#</td>
-				                    <td>Ordered By</td>
-				                    <td>Order ID</td>
-				                    <td>Order Date</td>
-				                    <td>Order Delivered</td>
-				                    <td>Status</td>
-				                    <td></td>
-				                </tr>
-				            </thead>
-				            <tbody>${content}</tbody>
-				        </table>`;
-
-			$("#display_orderList").html(content);
-		    $("select").material_select();
-		    $(".dropdown-button").dropdown();
-
-			var table = $('#display_orderList table').DataTable({
-		        "order": [[ 0, 'asc' ]],
-		        bLengthChange:false,
-		        "drawCallback": function ( settings ) {
-		            var api = this.api();
-		            var rows = api.rows( {page:'current'} ).nodes();
-		            var last=null;
+	linechart:function(){
+		let ctx = $("#chart_sales");
+		let chart = new Chart(ctx, {
+		    type: 'line',
+		    data: {
+		        labels: ["Mon", "Tue", "Wed", "Thurs", "Fri", "Sat"],
+		        datasets: [{
+		            label: 'Sales 1',
+		            data: [12, 19, 3, 5, 2, 3],
+		            backgroundColor: [
+		                'rgba(14, 0, 89, 0.2)',
+		                'rgba(14, 0, 89, 0.2)',
+		                'rgba(14, 0, 89, 0.2)',
+		                'rgba(14, 0, 89, 0.2)',
+		                'rgba(14, 0, 89, 0.2)',
+		                'rgba(14, 0, 89, 0.2)'
+		            ],
+		            borderColor: [
+		                'rgba(14, 0, 89, 1)',
+		                'rgba(14, 0, 89, 1)',
+		                'rgba(14, 0, 89, 1)',
+		                'rgba(14, 0, 89, 1)',
+		                'rgba(14, 0, 89, 1)',
+		                'rgba(14, 0, 89, 1)'
+		            ],
+		            borderWidth: 1
+		        },
+				{
+		            label: 'Sales 2',
+		            data: [9, 7, 11, 8, 1, 13],
+		            backgroundColor: [
+		                'rgba(247, 127, 0, 0.2)',
+		                'rgba(247, 127, 0, 0.2)',
+		                'rgba(247, 127, 0, 0.2)',
+		                'rgba(247, 127, 0, 0.2)',
+		                'rgba(247, 127, 0, 0.2)',
+		                'rgba(247, 127, 0, 0.2)'
+		            ],
+		            borderColor: [
+		                'rgba(247, 127, 0, 1)',
+		                'rgba(247, 127, 0, 1)',
+		                'rgba(247, 127, 0, 1)',
+		                'rgba(247, 127, 0, 1)',
+		                'rgba(247, 127, 0, 1)',
+		                'rgba(247, 127, 0, 1)'
+		            ],
+		            borderWidth: 1
+		        }]
+		    },
+		    options: {
+		        scales: {
+		            yAxes: [{
+		                ticks: {
+		                    beginAtZero:true
+		                }
+		            }]
 		        }
-		    });
-
-			$("a[data-cmd='showOrder']").on('click',function(){
-				var data = $(this).data();
-				var orders = system.ajax('../assets/harmony/Process.php?get-orders',data.node);
-				orders.done(function(orders){
-					var orders = JSON.parse(orders);
-					sales.viewOrders([data,orders]);
-				});
-			});
-		}
+		    }
+		});
 	},
-	updateStatus:function(statusData){
-		const data = system.ajax('../assets/harmony/Process.php?update-orderStatus',statusData);
-		data.done(function(returnData){
-			if(returnData == 1){
-				Materialize.toast(`Order has been ${statusData[1]}.`,4000);
-				$('#modal').modal('close');	
-				sales.ini();
-			}
-			else{
-				Materialize.toast('Cannot process request.',4000);
-			}
+	barchart:function(){
+		let ctx = $("#chart_totalSales");
+		let chart = new Chart(ctx, {
+		    type: 'bar',
+		    data: {
+		        labels: ["Mon", "Tue", "Wed", "Thurs", "Fri", "Sat"],
+		        datasets: [{
+		            label: 'Sales 1',
+		            data: [12, 19, 3, 5, 2, 3],
+		            backgroundColor: 'rgba(14, 0, 89, 1)',
+		        },
+				{
+		            label: 'Sales 2',
+		            data: [9, 7, 11, 8, 1, 13],
+		            backgroundColor: 'rgba(247, 127, 0, 1)',
+		        }]
+		    },
 		});
 	}
 }
