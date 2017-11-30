@@ -1,8 +1,66 @@
-<section id="subcontent" class='row' style="margin-bottom: unset;"></section>
+<div class="row" style="margin-bottom: unset;">
+	<div class="col s12 m8 l8" style="min-height: 600px; border-right: 1px solid #ccc;"><section id="subcontent"></section></div>
+	<div class='col s12 m4 l4'>
+		<div class="section">
+			<div class="row">
+				<div class="col s12">
+					<h5>Total Sales</h5>
+					<div class="chart-container">
+						<canvas id="chart_totalSales"></canvas>
+					</div>
+				</div>
+				<div class="col s12">
+					<div class="divider"></div>
+					<h6>Sales by RM</h6>
+					<div id='display_rm_sales'>
+						<table class="bordered">
+							<tr>
+								<td width="60%">
+									<img src="../assets/images/profile/avatar.png" class="circle left" width="35px">
+									<span class=""> Juan Dela Cruz</span>
+								</td>
+								<td width="10%">
+									200,000
+								</td>
+							</tr>
+							<tr>
+								<td width="60%">
+									<img src="../assets/images/profile/avatar.png" class="circle left" width="35px">
+									<span class=""> Jake Ramos</span>
+								</td>
+								<td width="10%">
+									13,000
+								</td>
+							</tr>
+							<tr>
+								<td width="60%">
+									<img src="../assets/images/profile/avatar.png" class="circle left" width="35px">
+									<span class=""> Jessica Perez</span>
+								</td>
+								<td width="10%">
+									94,000
+								</td>
+							</tr>
+							<tr>
+								<td width="60%">
+									<img src="../assets/images/profile/avatar.png" class="circle left" width="35px">
+									<span class=""> Chi Guevara</span>
+								</td>
+								<td width="10%">
+									150,000
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 <script src="../assets/js/head.js"></script>
 <script>
     login.ini();
-
+	sales.barchart();
     $("#log-out").on("click",function(){
         login.kill();
     })

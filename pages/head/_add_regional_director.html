@@ -1,0 +1,88 @@
+<div class="section">
+	<div class="row">
+		<div class="col s12">
+		<form id='form_registerRD' class='formValidate' method='get' action='' novalidate='novalidate'>
+			<div class='row'>
+				<div class='col offset-m1 offset-l1 s12 m10 l10'>
+					<h5>Personal Information</h5>
+					<div class='form-group'>
+						<div class='input-field'>
+							<label for='field_givenname'>Given Name: </label>
+				            <input id='field_givenname' type='text' name='field_givenname' data-error='.error_givenname'>
+							<div class='error_givenname'></div>	
+						</div>
+						<div class='input-field'>
+							<label for='field_middlename'>Middle Name: </label>
+				            <input id='field_middlename' type='text' name='field_middlename' data-error='.error_middlename'>
+							<div class='error_middlename'></div>	
+						</div>
+						<div class='input-field'>
+							<label for='field_familyname'>Family Name: </label>
+				            <input id='field_familyname' type='text' name='field_familyname' data-error='.error_familyname'>
+							<div class='error_familyname'></div>	
+						</div>
+						<div class='input-field'>
+							<label for='field_dateofbirth' class="active">Date of Birth: </label>
+				            <input id='field_dateofbirth' type='date' name='field_dateofbirth' data-error='.error_dateofbirth' max="2000-01-01" min="1900-01-01">
+							<div class='error_dateofbirth'></div>	
+						</div>
+						<div class='input-field' style="margin: 15px 0 35px 0;">
+							<label for='field_gender' class="active">Gender: </label>
+							<select id='field_gender' type='text' name='field_gender' data-error='.error_gender'>
+								<option>Male</option>
+								<option>Female</option>
+							</select>
+							<div class='error_gender'></div>	
+						</div>
+						<div class='input-field'>
+							<label for='field_address'>Address: </label>
+				            <input id='field_address' type='text' name='field_address' data-error='.error_address'>
+							<div class='error_address'></div>	
+						</div>
+						<div class='input-field'>
+							<label for='field_contact'>Contact Number: </label>
+				            <input id='field_contact' type='text' name='field_contact' data-error='.error_contact'>
+							<div class='error_contact'></div>	
+						</div>
+					</div>
+					<div class='form-group'>
+						<h5>Account Information</h5>
+						<div class='input-field'>
+							<label for='field_email'>Email: </label>
+				            <input id='field_email' type='text' name='field_email' data-error='.error_email'>
+							<div class='error_email'></div>	
+						</div>
+						<div class='input-field'>
+							<label for='field_password'>Password: </label>
+				            <input id='field_password' type='password' name='field_password' data-error='.error_password'>
+							<div class='error_password'></div>
+						</div>
+						<div class='row'>
+							<div class='display_notes'>
+								<ul>
+									<li>*<strong>Password</strong> must contain the following:</li>
+									<li>- atleast 6 characters length</li>
+									<li>- an uppercase letter</li>
+									<li>- a number</li>
+									<li>- a lowercare letter</li>
+									<li>- a special character [! @ $ % *]</li>
+								</ul>
+							</div>
+						</div>
+						<div class='row'>
+							<div class='input-field col s12'>
+								<button class='btn orange waves-effect waves-light right round-button z-depth-0' type='submit'>Save</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	regionalDirector.ini();
+	$('select').material_select();
+    $('.tooltipped').tooltip({delay: 50});
+</script>

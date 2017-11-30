@@ -135,307 +135,42 @@ $function = new DatabaseClasses;
 			$query = $function->PDO("SELECT * FROM tbl_account as a INNER JOIN tbl_retailbankinghead as b ON a.email = b.email WHERE a.email = '{$_SESSION['uhack'][0]}'");
 			print_r(json_encode($query));
 		}
-	//setters
-		if(isset($_GET['set-newAdmin'])){
-	        $id = $function->PDO_IDGenerator('tbl_admin','id');
-			$date = $function->PDO_DateAndTime();
-			$data = $_POST['data'];
 
-			$password = $function->password($data[3]['value']);
-
-			$query = $function->PDO("INSERT INTO tbl_admin(id,name,username,password,email,status,`date`,capabilities,picture) VALUES ('{$id}','{$data[0]['value']}','{$data[2]['value']}','{$password}','{$data[1]['value']}','1','{$date}','admin','avatar.png')");
-			if($query->execute()){
-				$log = $function->log("add","admin","Added admin with an ID of ".$id);
-				echo 1;
-			}
-			else{
-				$Data = $query->errorInfo();
-				print_r($Data);
-			}
+		if(isset($_GET['get-allRD'])){
+			$query = $function->PDO("SELECT * FROM tbl_regionaldirector");
+			print_r(json_encode($query));
 		}
 
-		if(isset($_GET['set-newProductAdmin'])){
-			$data = $_POST['data'];
-	        $id = $function->PDO_IDGenerator('tbl_product','id');
-			$date = $function->PDO_DateAndTime();
+		if(isset($_GET['get-allRM'])){
+			$query = $function->PDO("SELECT * FROM tbl_relationshipmanager");
+			print_r(json_encode($query));
+		}
 
-			$user = $function->getAdmin();
-			$query = $function->PDO("INSERT INTO tbl_product(id,product_name,qty,price,category,description,picture,brand,status,`date`,addedby,lastupdateby) VALUES ('{$id}','{$data[0]['value']}','{$data[1]['value']}','{$data[2]['value']}','{$data[4]['value']}','{$data[3]['value']}','default.png','{$data[5]['value']}','Published','{$date}','{$user}','{$user}')");
-			if($query->execute()){
-				$function->log("add",$user,"Added product with an ID of ".$id);
-				echo 1;
-			}
-			else{
-				$Data = $query->errorInfo();
-				print_r($Data);
-			}
-		}	
+		if(isset($_GET['get-allClient'])){
+			$query = $function->PDO("SELECT * FROM tbl_customer");
+			print_r(json_encode($query));
+		}
 
-		if(isset($_GET['set-newClient'])){
-			$data = $_POST['data'];
-	        $companyID = $function->PDO_IDGenerator('tbl_company','id');
+		if(isset($_GET['get-allPlans'])){
+			$query = $function->PDO("SELECT * FROM tbl_plan");
+			print_r(json_encode($query));
+		}
+
+		if(isset($_GET['get-allBranch'])){
+			$query = $function->PDO("SELECT * FROM tbl_branch");
+			print_r(json_encode($query));
+		}
+
+	//setters
+		if(isset($_GET['set-newRD'])){
+	        $id = $function->PDO_IDGenerator('tbl_account','id');
 			$date = $function->PDO_DateAndTime();
-		    $id = $companyID.'-0';
+			$data = $_POST['data'];
 			$password = $function->password($data[8]['value']);
 
-			$query = $function->PDO("INSERT INTO tbl_company(id,company_name,address,email,contact_number,logo,status,`date`) VALUES ('{$companyID}','{$data[0]['value']}','{$data[3]['value']}','{$data[2]['value']}','{$data[1]['value']}','logo.png','1','{$date}'); INSERT INTO tbl_employer(id,company_id,name,email,constact_number,picture,username,password,status,`date`) VALUES ('{$id}','{$companyID}','{$data[4]['value']}','{$data[6]['value']}','{$data[5]['value']}','avatar.png','{$data[7]['value']}','{$password}','1','{$date}')");
+			print_r($data);
+			$query = $function->PDO("INSERT INTO tbl_regionaldirector(id,given_name,middle_name,family_name,date_of_birth,gender,address,email,contact_number,branch_id,picture,status,date_registered) VALUES ('{$id}','{$data[0]['value']}','{$data[1]['value']}','{$data[2]['value']}','{$data[3]['value']}','{$data[4]['value']}','{$data[5]['value']}','{$data[7]['value']}','{$data[6]['value']}','branch','avatar.png','1','{$date}'); INSERT INTO tbl_account(id,email,password,account_id,category,status) VALUES ('{$id}','{$data[7]['value']}','{$password}','{$id}',2,1);");
 			if($query->execute()){
-				$function->log("add","Admin","Added employer with an id of \'".$id."\' in tbl_employer.");
-				echo 1;
-			}
-			else{
-				$Data = $query->errorInfo();
-				print_r($Data);
-			}
-		}	
-
-		if(isset($_GET['set-newEmployee'])){
-			$data = $_POST['data'];
-			$date = $function->PDO_DateAndTime();
-			$user = $data[1];
-			$numEmployees = $function->PDO("SELECT COUNT(*) FROM tbl_employee WHERE company_id = '{$user}';");
-			$count = $numEmployees[0][0];
-		    $id = $user.'-'.($count++);
-			$password = $function->password($data[0][11]['value']);
-			
-			$query = $function->PDO("INSERT INTO tbl_employee(id,employee_id,company_id,family_name,given_name,middle_name,nickname,gender,date_of_birth,contact_number,	email,address,picture,position,password,status,`date`) VALUES ('{$id}','{$data[0][10]['value']}','{$user}','{$data[0][2]['value']}','{$data[0][0]['value']}','{$data[0][1]['value']}','{$data[0][3]['value']}','{$data[0][5]['value']}','{$data[0][4]['value']}','{$data[0][7]['value']}','{$data[0][8]['value']}','{$data[0][6]['value']}','avatar.png','{$data[0][9]['value']}','{$password}','1','{$date}')");
-			if($query->execute()){
-				$query2 = $function->PDO("INSERT INTO tbl_points(id,employee_id,company_id,points) VALUES ('{$id}',{$function->escape($data[0][10]['value'])},'{$user}',0)");
-				if($query2->execute()){
-					$function->log("add","Admin","Added employee with an id of \'".$id."\' in tbl_employee.");
-					echo 1;
-				}
-				else{
-					$query3 = $function->PDO("DELETE tbl_employee WHERE id = '{$id}';");
-					echo 0;
-					$Data = $query2->errorInfo();
-					print_r($Data);
-				}
-			}
-			else{
-				$Data = $query->errorInfo();
-				print_r($Data);
-			}
-		}	
-
-		if(isset($_GET['set-newBulkEmployee'])){
-			$q1 = ""; $count = 0;
-			$date = $function->PDO_DateAndTime();
-			$user = $function->getUser();
-			$numEmployees = $function->PDO("SELECT * FROM tbl_employee WHERE company_id = '{$user}'");
-			$count = count($numEmployees);
-
-			$data = $_POST['data'];
-			$data = json_decode($data);
-
-			foreach ($data as $key => $value) {
-				$dob = date("m/j/Y",strtotime($value[3]));
-				$email = (count($value)>5)?$function->escape($value[5]):"";
-		        $id = $user.'-'.($count++);
-		        $password = $function->password($id);
-		        if((count($data)-1) <= $key){
-					$q1 .= "('{$id}',{$function->escape($value[0])},'{$user}','{$password}',{$function->escape($value[2])},{$function->escape($value[1])},{$function->escape($value[4])},'{$dob}',{$email},'1','{$date}')";
-		        }
-		        else{
-					$q1 .= "('{$id}',{$function->escape($value[0])},'{$user}','{$password}',{$function->escape($value[2])},{$function->escape($value[1])},{$function->escape($value[4])},'{$dob}',{$email},'1','{$date}'),";
-		        }
-			}
-
-			$log = $function->log("add",$user,"adding bulk employee in tbl_employer.");
-
-			$query = $function->PDO("INSERT INTO  tbl_employee(id,employee_id,employer_id,password,family_name,given_name,gender,date_of_birth,email,status,`date`) VALUES".$q1);
-			if($query->execute()){
-				$function->log($log,$user,"Added ".(count($data))." employee in tbl_employer.");
-				echo 1;
-			}
-			else{
-				$Data = $query->errorInfo();
-				print_r($Data);
-			}
-		}	
-
-		if(isset($_GET['set-newBulkEmployeeAdmin'])){
-			$q1 = ""; $q2 = "";
-			$date = $function->PDO_DateAndTime();
-			$data = $_POST['data'];
-			$user = $data[1];
-
-			$numEmployees = $function->PDO("SELECT COUNT(*) FROM tbl_employee WHERE company_id = '{$user}';");
-			$count = $numEmployees[0][0];
-			$data = json_decode($data[0]);
-
-			foreach ($data as $key => $value) {
-				$dob = date("m/j/Y",strtotime($value[3]));
-				$email = (count($value)>5)?$function->escape($value[5]):"";
-		        $id = $user.'-'.($count++);
-		        $password = $function->password($id);
-				$points = $function->PDO("SELECT * FROM tbl_points WHERE employee_id = {$function->escape($value[0])} AND company_id = '{$user}';");
-		        if((count($data)-1) <= $key){
-					$q1 .= "('{$id}',{$function->escape($value[0])},'{$user}','{$password}',{$function->escape($value[2])},{$function->escape($value[1])},{$function->escape($value[4])},'{$dob}',{$email},1,'{$date}')";
-					if(count($points)==0){
-						$q2 .= "('{$id}',{$function->escape($value[0])},'{$user}',0)";
-					}
-		        }
-		        else{
-					$q1 .= "('{$id}',{$function->escape($value[0])},'{$user}','{$password}',{$function->escape($value[2])},{$function->escape($value[1])},{$function->escape($value[4])},'{$dob}',{$email},1,'{$date}'),";
-					if(count($points)==0){
-						$q2 .= "('{$id}',{$function->escape($value[0])},'{$user}',0),";
-					}
-		        }
-			}
-
-			$query = $function->PDO("INSERT INTO tbl_employee(id,empolyee_id,company_id,password,family_name,given_name,gender,date_of_birth,email,status,`date`) VALUES".$q1.";");
-			if($query->execute()){
-				$query2 = $function->PDO("INSERT INTO tbl_points(id,employee_id,company_id,points) VALUES".$q2.";");
-				if($query2->execute()){
-					$log = $function->log("add","Admin","Added ".(count($data))." employee in tbl_employer.");
-					echo 1;
-				}
-				else{
-					$query3 = $function->PDO("DELETE tbl_employee WHERE company_id = '{$user}';");
-					echo 0;
-					$Data = $query2->errorInfo();
-					print_r($Data);
-				}
-			}
-			else{
-				$Data = $query->errorInfo();
-				print_r($Data);
-			}
-		}	
-
-		if(isset($_GET['set-BulkEmployee'])){
-			$q1 = ""; $q2 = "";
-			$date = $function->PDO_DateAndTime();
-			$data = $_POST['data'];
-			$company_id = $data[1];
-
-			$numEmployees = $function->PDO("SELECT COUNT(*) FROM tbl_employee WHERE company_id = '{$company_id}';");
-			$count = $numEmployees[0][0];
-			$data = json_decode($data[0]);
-
-			foreach ($data as $key => $value) {
-				$dob = date("m/j/Y",strtotime($value[3]));
-				$email = (count($value)>5)?strtolower($function->escape($value[5])):"";
-		        $id = $company_id.'-'.($count++);
-		        // $password = $function->password($id);
-		        if((count($data)-1) <= $key){
-					$q1 .= "('{$id}',{$function->escape($value[0])},'{$company_id}',{$function->escape($value[2])},{$email},'',0)";
-		        }
-		        else{
-					$q1 .= "('{$id}',{$function->escape($value[0])},'{$company_id}',{$function->escape($value[2])},{$email},'',0),";
-		        }
-			}
-
-			$query = $function->PDO("INSERT INTO tbl_accountconfirmation(id,employee_id,company_id,name,email,meta_data,sent) VALUES".$q1.";");
-			if($query->execute()){
-				$log = $function->log("Add Employees","Admin","Added ".(count($data))." employees to company with an id "+$company_id);
-				echo 1;
-			}
-			else{
-				$Data = $query->errorInfo();
-				print_r($Data);
-			}
-		}	
-
-		if(isset($_GET['set-uploadPointsAdmin'])){
-			$q1 = "";$q2 = "";
-			$date = $function->PDO_DateAndTime();
-			$data = $_POST['data'];
-			$user = $data[1];
-			$numEmployees = $function->PDO("SELECT COUNT(*) FROM tbl_pointsactivity");
-			$count = $numEmployees[0][0];
-
-			$data = json_decode($data[0]);
-
-			foreach($data as $key => $value){
-				$points = (int)$value[3];
-		        $id = $user.'-'.($count++);
-				$email = (count($value)>5)?$function->escape($value[2]):"";
-
-				$currentPoints = $function->PDO("SELECT * FROM tbl_points WHERE employee_id = {$function->escape($value[0])};");
-				$newpoints = ((count($currentPoints)>0)?$currentPoints[0][2]:0)+$points;
-
-				$q1 .= "UPDATE tbl_points SET points = '{$newpoints}' WHERE employee_id = {$function->escape($value[0])} AND company_id = '{$user}';";
-		        if((count($data)-1) <= $key){
-					$q2 .= "('{$id}','{$points}','admin',{$function->escape($value[0])},'{$date}','')";
-		        }
-		        else{
-					$q2 .= "('{$id}','{$points}','admin',{$function->escape($value[0])},'{$date}',''),";
-		        }
-			}
-
-			$query = $function->PDO($q1);
-			if($query->execute()){
-				$query2 = $function->PDO("INSERT INTO tbl_pointsactivity(id,points,addedby,employee_id,`date`,remarks) VALUES".$q2);
-				if($query2->execute()){
-					$log = $function->log("add","admin","adding bulk points employees");
-					echo 1;
-				}
-				else{
-					$Data = $query2->errorInfo();
-					print_r($Data);
-				}
-			}
-			else{
-				$Data = $query->errorInfo();
-				print_r($Data);
-			}
-		}	
-
-		if(isset($_GET['set-addPointsAdmin'])){
-			$date = $function->PDO_DateAndTime();
-			$data = $_POST['data'];
-			$employee_id = $data[1];
-			$quantity = $function->PDO("SELECT COUNT(*) FROM tbl_pointsactivity");
-			$count = $quantity[0][0];
-			$points = (int)$data[0][0]['value'];
-			$currentPoints = $function->PDO("SELECT * FROM tbl_points WHERE id = '{$employee_id}';");
-			$newpoints = $currentPoints[0][2]+$points;
-	        $id = $currentPoints[0][3].'-'.($count+1);
-	        $remarks = $function->escape($data[0][1]['value']);
-
-			$query = $function->PDO("UPDATE tbl_points SET points = '{$newpoints}' WHERE id = '{$employee_id}' AND company_id = '{$currentPoints[0][3]}';");
-			if($query->execute()){
-				$query2 = $function->PDO("INSERT INTO tbl_pointsactivity(id,points,addedby,employee_id,`date`,remarks) VALUES('{$id}','{$points}','admin','{$currentPoints[0][1]}','{$date}',{$remarks})");
-				if($query2->execute()){
-					$log = $function->log("add","admin","adding '{$points}' points employees");
-					echo 1;
-				}
-				else{
-					$Data = $query2->errorInfo();
-					print_r($Data);
-				}
-			}
-			else{
-				$Data = $query->errorInfo();
-				print_r($Data);
-			}
-		}
-
-		if(isset($_GET['set-addBrand'])){
-			$data = $_POST['data'];
-			$date = $function->PDO_DateAndTime();
-	        $id = $function->PDO_IDGenerator('tbl_brand','id');
-			$brand = $function->escape($data[0]['value']);
-			$description = $function->escape($data[1]['value']);
-			$picture = $function->saveBrand($data[2]);
-			$query = $function->PDO("INSERT INTO tbl_brand(id,brandName,brandDescription,icon,date) VALUES ('{$id}',{$brand},{$description},'{$picture}','{$date}');");
-			if($query->execute()){
-				$log = $function->log2("Admin","Added {$brand} Brand;","Brand");
-				echo 1;
-			}
-			else{
-				$Data = $query->errorInfo();
-				print_r($Data);	
-			}
-		}
-
-		if(isset($_GET['set-deleteBrand'])){
-			$data = $_POST['data'];
-			$query = $function->PDO("DELETE FROM tbl_brand WHERE id = '{$data}'");
-			if($query->execute()){
-				$log = $function->log2("Admin","Deleted a brand; '${data}'.","Brand");
 				echo 1;
 			}
 			else{
@@ -444,16 +179,14 @@ $function = new DatabaseClasses;
 			}
 		}
 
-		if(isset($_GET['set-addCategory'])){
-			$data = $_POST['data'];
+		if(isset($_GET['set-newRM'])){
+	        $id = $function->PDO_IDGenerator('tbl_account','id');
 			$date = $function->PDO_DateAndTime();
-	        $id = $function->PDO_IDGenerator('tbl_productcategories','id');
-			$category = $function->escape($data[0]['value']);
-			$picture = $function->saveIcon($data[1]);
+			$data = $_POST['data'];
+			$password = $function->password($data[8]['value']);
 
-			$query = $function->PDO("INSERT INTO tbl_productcategories(id,category,icon,date) VALUES ('{$id}',{$category},'{$picture}','{$date}');");
+			$query = $function->PDO("INSERT INTO tbl_relationshipmanager(id,given_name,middle_name,family_name,date_of_birth,gender,address,email,contact_number,branch_id,picture,status,date_registered) VALUES ('{$id}','{$data[0]['value']}','{$data[1]['value']}','{$data[2]['value']}','{$data[3]['value']}','{$data[4]['value']}','{$data[5]['value']}','{$data[7]['value']}','{$data[6]['value']}','branch','avatar.png','1','{$date}'); INSERT INTO tbl_account(id,email,password,account_id,category,status) VALUES ('{$id}','{$data[7]['value']}','{$password}','{$id}',3,1);");
 			if($query->execute()){
-				$log = $function->log2("Admin","Added {$category} Brand;","Brand");
 				echo 1;
 			}
 			else{
@@ -462,11 +195,13 @@ $function = new DatabaseClasses;
 			}
 		}
 
-		if(isset($_GET['set-deleteCategory'])){
+		if(isset($_GET['set-newClient'])){
+	        $id = $function->PDO_IDGenerator('tbl_customer','id');
+			$date = $function->PDO_DateAndTime();
 			$data = $_POST['data'];
-			$query = $function->PDO("DELETE FROM tbl_productcategories WHERE id = '{$data}'");
+
+			$query = $function->PDO("INSERT INTO tbl_customer(id,given_name,middle_name,family_name,date_of_birth,gender,address,email,contact_number,occupation,picture,status,date_registered) VALUES ('{$id}','{$data[0]['value']}','{$data[1]['value']}','{$data[2]['value']}','{$data[3]['value']}','{$data[4]['value']}','{$data[5]['value']}','{$data[6]['value']}','{$data[7]['value']}','{$data[8]['value']}','avatar.png','1','{$date}');");
 			if($query->execute()){
-				$log = $function->log2("Admin","Deleted a category; '${data}'.","Category");
 				echo 1;
 			}
 			else{
@@ -475,14 +210,13 @@ $function = new DatabaseClasses;
 			}
 		}
 
-		if(isset($_GET['set-wishlist'])){
-			$data = $_POST['data'];
+		if(isset($_GET['set-newPlan'])){
+	        $id = $function->PDO_IDGenerator('tbl_plan','id');
 			$date = $function->PDO_DateAndTime();
-	        $id = $function->PDO_IDGenerator('tbl_wishlist','id');
-
-			$query = $function->PDO("INSERT INTO tbl_wishlist(id,product_id,employee_id,date,status) VALUES ('{$id}','{$data[1]}','{$data[0]}','{$date}',1);");
+			$data = $_POST['data'];
+			print_r($data);
+			$query = $function->PDO("INSERT INTO tbl_plan(id,title,description,price) VALUES ('{$id}','{$data[0]['value']}','{$data[1]['value']}','{$data[2]['value']}');");
 			if($query->execute()){
-				$log = $function->log2($data[1],"Added  wishlist","Wishlist");
 				echo 1;
 			}
 			else{
@@ -491,152 +225,12 @@ $function = new DatabaseClasses;
 			}
 		}
 
-		if(isset($_GET['set-orders'])){
-			$q1 = ""; $q2 = ""; $q3 = ""; $points = 0; $spent = 0;
-			$data = $_POST['data'];
-			$user = $function->getEmployee();
+		if(isset($_GET['set-newBranch'])){
+	        $id = $function->PDO_IDGenerator('tbl_branch','id');
 			$date = $function->PDO_DateAndTime();
-	        $orderID = $function->PDO_IDGenerator('tbl_orders','id');
-			$numProd = $function->PDO("SELECT COUNT(*) FROM tbl_orderdetails");
-			$count = $numProd[0][0];
-
-			foreach ($data as $key => $value) {
-				$qty = $value[1][1];
-				$points = $points + $qty;
-		        $id = $user.'-'.($count++);
-				$prodQty = $function->PDO("SELECT * FROM tbl_product WHERE id = '{$value[1][0]}';");
-				$_prodQty = $prodQty[0][2]-$qty;
-
-				$spent = $spent + ($prodQty[0][3] * $qty);
-
-		        if((count($data)-1) <= $key){
-					$q1 .= "('{$id}',{$qty},'{$value[1][0]}','{$orderID}','{$date}','',1)";
-					$q2 .= "UPDATE tbl_product SET qty = '{$_prodQty}' WHERE id = '{$value[1][0]}'";
-		        }
-		        else{
-					$q1 .= "('{$id}',{$qty},'{$value[1][0]}','{$orderID}','{$date}','',1),";
-					$q2 .= "UPDATE tbl_product SET qty = '{$_prodQty}' WHERE id = '{$value[1][0]}'";
-		        }
-			}
-
-			$currentPoints = $function->PDO("SELECT * FROM tbl_points WHERE id = '{$user}';");
-			$newpoints = $currentPoints[0][2]-$spent;
-
-			if($newpoints>=0){
-				$query = $function->PDO("INSERT INTO tbl_orders(id,employee_id,order_date,date_delivered,status) VALUES ('{$orderID}','{$user}','{$date}','','Pending'); INSERT INTO tbl_orderdetails(id,qty,product_id,order_id,order_date,order_delivered,status) VALUES ".$q1.";".$q2.";");
-				if($query->execute()){
-					$_query = $function->PDO("UPDATE tbl_points SET points = '{$newpoints}' WHERE id = '{$user}';");
-					if($_query->execute()){
-						$log = $function->log("add",$user,"Placed orders. Order ID: "+$orderID);
-						echo 1;
-					}
-				}
-				else{
-					$Data = $query->errorInfo();
-					print_r($Data);
-				}
-			}
-			else{
-				echo 2;
-			}
-		}	
-
-		if(isset($_GET['set-newPendingEmployee'])){
 			$data = $_POST['data'];
-			$date = $function->PDO_DateAndTime();
-			$user = $data[1];
-			$numEmployees = $function->PDO("SELECT COUNT(*) FROM tbl_employee WHERE company_id = '{$user}';");
-			$count = $numEmployees[0][0];
-		    $id = $user.'-'.($count++);
-			$password = $function->password($data[0][11]['value']);
-			
-			$query = $function->PDO("INSERT INTO tbl_employee(id,employee_id,company_id,family_name,given_name,middle_name,nickname,gender,date_of_birth,contact_number,	email,address,picture,position,password,status,`date`) VALUES ('{$id}','{$data[0][10]['value']}','{$user}','{$data[0][2]['value']}','{$data[0][0]['value']}','{$data[0][1]['value']}','{$data[0][3]['value']}','{$data[0][5]['value']}','{$data[0][4]['value']}','{$data[0][7]['value']}','{$data[0][8]['value']}','{$data[0][6]['value']}','avatar.jpg','{$data[0][9]['value']}','{$password}','2','{$date}')");
+			$query = $function->PDO("INSERT INTO tbl_branch(id,branch_name,branch_location) VALUES ('{$id}','{$data[0]['value']}','{$data[1]['value']}');");
 			if($query->execute()){
-				$query2 = $function->PDO("INSERT INTO tbl_points(id,employee_id,company_id,points) VALUES ('{$id}',{$function->escape($data[0][10]['value'])},'{$user}',0)");
-				if($query2->execute()){
-					$function->log("add","Employer","Added employee with an id of \'".$id."\' in tbl_employee.");
-					echo 1;
-				}
-				else{
-					$query3 = $function->PDO("DELETE tbl_employee WHERE id = '{$id}';");
-					echo 0;
-					$Data = $query2->errorInfo();
-					print_r($Data);
-				}
-			}
-			else{
-				$Data = $query->errorInfo();
-				print_r($Data);
-			}
-		}	
-
-		if(isset($_GET['set-addPendingPointsAdmin'])){
-	        $id = $function->PDO_IDGenerator('tbl_request','id');
-			$date = $function->PDO_DateAndTime();
-			$user = $function->getUser();
-			$data = $_POST['data'];
-			$_id = explode("-", $data[1]);
-			$query = $function->PDO("SELECT * FROM tbl_pointbalance WHERE id = '{$_id[0]}'");
-
-			if($query[0][1]>=$data[0][0]['value']){
-				$newBalance = (int)$query[0][1] - (int)$data[0][0]['value'];
-				$query2 = $function->PDO("INSERT INTO tbl_request(id,header,request_by,request_to,value,remarks,status,`date`) VALUES ('{$id}','Add Points','{$user}','{$data[1]}','{$data[0][0]['value']}','{$data[0][1]['value']}','0','{$date}'); UPDATE tbl_pointbalance SET balance = '{$newBalance}' WHERE id = '{$_id[0]}'");
-				if($query2->execute()){
-					$log = $function->log2($data[1],"Added points to "+$data[1]+"Waiting for admin's confirmation.","Points");
-					echo 1;
-				}
-				else{
-					$Data = $query2->errorInfo();
-					print_r($Data);
-				}
-			}
-			else{
-				echo 0;
-			}
-		}
-
-		if(isset($_GET['set-addPendingPointsEmployer'])){
-	        $id = $function->PDO_IDGenerator('tbl_request','id');
-			$date = $function->PDO_DateAndTime();
-			$user = $function->getUser();
-			$data = $_POST['data'];
-			$_id = explode("-", $data[1]);
-			$query = $function->PDO("SELECT * FROM tbl_pointbalance WHERE id = '{$_id[0]}'");
-
-			if($query[0][1]>=$data[0][0]['value']){
-				$newBalance = (int)$query[0][1] - (int)$data[0][0]['value'];
-				$query2 = $function->PDO("INSERT INTO tbl_request(id,header,request_by,request_to,value,remarks,status,`date`) VALUES ('{$id}','Add Points','{$user}','{$data[1]}','{$data[0][0]['value']}','{$data[0][1]['value']}','0','{$date}'); UPDATE tbl_pointbalance SET balance = '{$newBalance}' WHERE id = '{$_id[0]}'");
-				if($query2->execute()){
-					$log = $function->log2($data[1],"Added points to "+$data[1]+"Waiting for admin's confirmation.","Points");
-					echo 1;
-				}
-				else{
-					$Data = $query2->errorInfo();
-					print_r($Data);
-				}
-			}
-			else{
-				echo 0;
-			}
-		}
-
-		if(isset($_GET['set-confirmEmployeeAccount'])){
-			$data = $_POST['data'];
-			$date = $function->PDO_DateAndTime();
-			$tempAccount = $function->PDO("SELECT * FROM tbl_accountconfirmation WHERE id = '{$data[1]}'");
-
-			$user = $function->escape($data[1]);
-			$company_id = $tempAccount[0][2];
-			$employee_id = $tempAccount[0][1];
-			$email = $function->escape($tempAccount[0][4]);
-			$password = $function->password($data[0][8]['value']);
-			$numEmployees = $function->PDO("SELECT COUNT(*) FROM tbl_employee WHERE company_id = '{$company_id}';");
-			$count = $numEmployees[0][0];
-		    $id = $company_id.'-'.($count++);
-
-			$query = $function->PDO("INSERT INTO tbl_employee(id,employee_id,company_id,family_name,given_name,middle_name,nickname,gender,date_of_birth,contact_number,	email,address,picture,position,password,status,`date`) VALUES ('{$id}','{$employee_id}','{$company_id}',{$function->escape($data[0][0]['value'])},{$function->escape($data[0][1]['value'])},{$function->escape($data[0][2]['value'])},{$function->escape($data[0][3]['value'])},{$function->escape($data[0][4]['value'])},{$function->escape($data[0][5]['value'])},{$function->escape($data[0][7]['value'])},{$email},{$function->escape($data[0][6]['value'])},'avatar.jpg','Employee','{$password}','1','{$date}'); INSERT INTO tbl_points(id,employee_id,company_id,points) VALUES ('{$id}','{$employee_id}','{$company_id}',0); DELETE FROM tbl_accountconfirmation WHERE id = '{$data[1]}'");
-			if($query->execute()){
-				$function->log("Confirmation",$id,"Confirmed account");
 				echo 1;
 			}
 			else{
@@ -1766,3 +1360,4 @@ $function = new DatabaseClasses;
 	        print_r($result);
 	    }
 ?>
+

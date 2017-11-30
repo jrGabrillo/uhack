@@ -28,7 +28,7 @@ var App = function () {
                                         </div>`);
                     setTimeout(function(){
                         App.handleLoadPage(window.location.hash);
-                    },100);
+                    },1000);
                 }
             });
         },
@@ -58,8 +58,9 @@ var App = function () {
                     targetUrl = newhash[1].replace('content=','../pages/'+node+'/')+".html";
                 }
 
+                let header = newhash[1].replace('content=','').replace(/_/g,' ');
+                $('#display_page').html(header.toUpperCase());
 
-                console.log(targetUrl);
                 var subcontent = system.html(targetUrl);
                 subcontent.done(function(data){
                     $('#subcontent').html(data);

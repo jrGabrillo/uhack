@@ -25,7 +25,7 @@
     <body>
         <header>
         </header>
-        <main>
+        <main class="leftside-navigation ps-container ps-active-y">
             <div id='block-control' class=''></div>
             <div class="progress hide-on-med-and-up hide-on-med-and-down" style="margin: 0rem 0 1rem 0;">
                 <div class="indeterminate"></div>
@@ -62,9 +62,8 @@
         <script src="../assets/js/app.js"></script>
         <script src="../assets/js/materialize.min.js"></script>
         <script src="../assets/js/typehead.bundle.min.js"></script>
-        <script src="../assets/js/papaparse.js"></script>
-        <script src="../assets/js/codemirror.min.js"></script>
         <script src="../assets/js/jquery.idle.min.js"></script>
+        <script src="../assets/js/perfect-scrollbar.min.js"></script>
         <script src="../assets/js/validation/jquery.validate.min.js"></script>
         <script src="../assets/js/validation/additional-methods.min.js"></script>
         <script src="../assets/js/dataTables/jquery.dataTables.js"></script>
@@ -72,7 +71,6 @@
         <script src="../assets/js/dataTables/dataTables.responsive.js"></script>
         <script src="../assets/js/dataTables/dataTables.tableTools.min.js"></script>
         <script src="../assets/js/dataTables/dataTables.material.min.js"></script>
-        <script src="../assets/js/cropper.min.js"></script>
         <script src="../assets/js/chart.min.js"></script>
         <script src="../assets/js/plugins.js"></script>
         <script src="../assets/js/process.js"></script>
@@ -83,6 +81,13 @@
             system.forceLogout(function(){
                 login.kill();
             });
+
+            const ps = new PerfectScrollbar('.ps-container', {
+                wheelSpeed: 1,
+                wheelPropagation: true,
+                minScrollbarLength: 10
+            });
+
         </script>
     </body>
 </html>
