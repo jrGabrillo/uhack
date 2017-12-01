@@ -409,6 +409,12 @@ client = {
 						</ul>`;
 		$("#display_details .account").html(content);
 	},
+	getPlan:function(){
+
+	},
+	listPlan:function(){
+
+	}
 }
 
 regionalDirector = {
