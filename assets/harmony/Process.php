@@ -169,6 +169,12 @@ $function = new DatabaseClasses;
 			print_r(json_encode($query));
 		}
 
+		if(isset($_GET['get-client'])){
+			$data = $_POST['data'];
+			$query = $function->PDO("SELECT * FROM tbl_customer WHERE id='{$data}'");
+			print_r(json_encode($query));
+		}
+
 		if(isset($_GET['get-allPlans'])){
 			$query = $function->PDO("SELECT * FROM tbl_plan");
 			print_r(json_encode($query));
@@ -176,6 +182,12 @@ $function = new DatabaseClasses;
 
 		if(isset($_GET['get-allBranch'])){
 			$query = $function->PDO("SELECT * FROM tbl_branch");
+			print_r(json_encode($query));
+		}
+
+		if(isset($_GET['get-RDManagingRM'])){
+			$data = $_POST['data'];
+			$query = $function->PDO("SELECT * FROM tbl_handle as a INNER JOIN tbl_relationshipmanager as b ON a.handle_account = b.id WHERE a.handled_by = '{$data}'");
 			print_r(json_encode($query));
 		}
 

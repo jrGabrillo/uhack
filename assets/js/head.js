@@ -340,7 +340,6 @@ client = {
 		let data = JSON.parse(this.get());
 		let content = "";
 		$.each(data,function(i,v){
-			console.log(v);
 			content += `<tr>
 							<td width="10%">
 								<img src="../assets/images/profile/avatar.png" class="circle left" width="35px">
@@ -348,14 +347,14 @@ client = {
 							<td width="40%">
 								<span class=""> ${v[1]} ${v[2]} ${v[3]}</span>
 							</td>
-							<td width="10%">
+							<td width="20%">
 								${v[9]}
 							</td>
-							<td width="20%">
+							<td width="30%">
 								${v[12]}
 							</td>
-							<td width="30%">
-								<a class="waves-effect waves-orange orange-text right" href="#cmd=index;content=account;${v[0]}"><i class="material-icons grey-text">chevron_right</i></a>
+							<td width="10%">
+								<a class="waves-effect waves-orange orange-text right" href="#cmd=index;content=_account_client;${v[0]}"><i class="material-icons grey-text">chevron_right</i></a>
 							</td>
 						</tr>`;
 		});
@@ -368,6 +367,47 @@ client = {
 						</thead>
 						<tbody>${content}</tbody></table>`;
 		$("#display_list").html(content);
+	},
+	display:function(){
+		let id = window.location.hash.substring(1).split(';');
+		let data = JSON.parse(this.get(id[2]));
+		let content = `<ul class="collection">
+							<li class="collection-item avatar">
+								<img src="../assets/images/profile/avatar.png" alt="" class="circle responsive-img profile-image" >
+								<span class="title bold" style='font-size: 20px;'>${data[0][1]} ${data[0][2]} ${data[0][3]}</span><br/>
+								<ul class="collapsible z-depth-0" data-collapsible="accordion">
+									<li>
+										<table>
+											<tr>
+												<td class='bold'>Occupation</td>
+												<td>${data[0][9]}</td>
+											</tr>
+											<tr>
+												<td class='bold'>Birthdate</td>
+												<td>${data[0][4]}</td>
+											</tr>
+											<tr>
+												<td class='bold'>Gender</td>
+												<td>${data[0][5]}</td>
+											</tr>
+											<tr>
+												<td class='bold'>Address</td>
+												<td>${data[0][6]}</td>
+											</tr>
+											<tr>
+												<td class='bold'>Email</td>
+												<td>${data[0][7]}</td>
+											</tr>
+											<tr>
+												<td class='bold'>Contact</td>
+												<td>${data[0][8]}</td>
+											</tr>
+										</table>
+									</li>
+								</ul>
+							</li>
+						</ul>`;
+		$("#display_details .account").html(content);
 	},
 }
 
@@ -440,10 +480,10 @@ regionalDirector = {
 							<td width="40%">
 								<span class=""> ${v[1]} ${v[2]} ${v[3]}</span>
 							</td>
-							<td width="10%">
+							<td width="40%">
 								${branchLocation}
 							</td>
-							<td width="40%">
+							<td width="10%">
 								<a class="waves-effect waves-orange orange-text right" href="#cmd=index;content=_account_regional_director;${v[0]}"><i class="material-icons grey-text">chevron_right</i></a>
 							</td>
 						</tr>`;
@@ -461,13 +501,10 @@ regionalDirector = {
 	display:function(){
 		let id = window.location.hash.substring(1).split(';');
 		let data = JSON.parse(this.get(id[2]));
-		let managingRM = this.getManagingRM(id[2]);
 		let branchList = JSON.parse(branch.get());
 		let branchLocation = system.searchJSON(branchList,0,data[9]);
 		// sales.rm_chart(id[2]);
 		// sales.rm_list(id[2]);
-
-		console.log(managingRM);
 
 		$.each(branchList,function(i,v){
 			branchList += `<option value="${v[0]}">${v[1].replace('UnionBank of the Philippines ','')}</option>`;
@@ -525,7 +562,8 @@ regionalDirector = {
 							</li>
 						</ul>`;
 		$("#display_details .account").html(content);
-		this.update(id[2])
+		this.update(id[2]);
+		this.getManagingRM(id[2]);
 	},
 	update:function(id){
 		$("select").on('change',function(e){
@@ -542,9 +580,48 @@ regionalDirector = {
 		})
 	},
 	getManagingRM:function(id){
-		var data = system.html('../assets/harmony/Process.php?get-allManagingRM');
+		let content = "";
+		let branchList = JSON.parse(branch.get());
+		let branchLocation = "";
+		var data = system.ajax('../assets/harmony/Process.php?get-RDManagingRM',id);
 		data.done(function(data){
-			console.log(data);
+			data = JSON.parse(data);
+
+			if(data.length>0){
+				$.each(data,function(i,v){
+					branchLocation = system.searchJSON(branchList,0,v[12]);
+					branchLocation = (branchLocation.length>0)?branchLocation[0][1]:'Not assigned';
+					content += `<tr>
+									<td width="10%">
+										<img src="../assets/images/profile/${v[13]}" class="circle left" width="35px">
+									</td>
+									<td width="40%">
+										<span class=""> ${v[4]} ${v[5]} ${v[6]}</span>
+									</td>
+									<td width="40%">
+										${branchLocation}
+									</td>
+									<td width="10%">
+										<a class="waves-effect waves-orange orange-text right" href="#cmd=index;content=_account_regional_director;${v[3]}"><i class="material-icons grey-text">chevron_right</i></a>
+									</td>
+								</tr>`;
+				});
+				content = `<h5>Managing Relationship Managers</h5>
+								<table class='table bordered'>
+								<thead class='grey lighten-4'>
+									<tr>
+										<th></th><th>Name</th><th>Branch</th><th></th>
+									</tr>
+								</thead>
+								<tbody>${content}</tbody></table>`;
+			}
+			else{
+				content = `<div class="center">
+							<div class="divider"></div>
+							<h5>No account</h5>
+						</div>`;
+			}
+			$("#display_managingRM").html(content);
 		})
 	}
 }
@@ -586,7 +663,6 @@ plan = {
 		}); 
 	},
 	get:function(id){
-		console.log('d');
 		if((typeof id == null) || (id == undefined)){
 			var data = system.html('../assets/harmony/Process.php?get-allPlans');
 			return data.responseText;
@@ -695,7 +771,6 @@ branch = {
 		$("#display_list").html(content);
 	},
 }
-
 
 sales = {
 	linechart:function(){
