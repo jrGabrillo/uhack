@@ -279,7 +279,7 @@ h6{
     right: 0%;
 }
 
-#display_details .collection, .collapsible, .collapsible-body, .collapsible-header, li{
+#display_details .collection, #display_details .collapsible, #display_details .collapsible-body, #display_details .collapsible-header, #display_details li, #display_details input{
     border:none !important;
 }
 
@@ -293,4 +293,12 @@ h6{
 
 #display_details .collapsible-body{
     margin: 0px 0px 0px 41px;
+}
+
+#display_details .collection{
+    overflow: unset !important;
+}
+
+#display_details .dropdown-content{
+    width:200% !important;
 }

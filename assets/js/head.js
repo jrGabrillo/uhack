@@ -127,7 +127,12 @@ relationshipManager = {
 	list:function(){
 		let data = JSON.parse(this.get());
 		let content = "";
+		let branchList = JSON.parse(branch.get());
+		let branchLocation = "";
+
 		$.each(data,function(i,v){
+			branchLocation = system.searchJSON(branchList,0,v[9]);
+			branchLocation = (branchLocation.length>0)?branchLocation[0][1]:'Not assigned';
 			content += `<tr>
 							<td width="10%">
 								<img src="../assets/images/profile/${v[10]}" class="circle left" width="35px">
@@ -135,10 +140,10 @@ relationshipManager = {
 							<td width="40%">
 								<span class=""> ${v[1]} ${v[2]} ${v[3]}</span>
 							</td>
-							<td width="10%">
-								${v[9]}
-							</td>
 							<td width="40%">
+								${branchLocation}
+							</td>
+							<td width="10%">
 								<a class="waves-effect waves-orange orange-text right" href="#cmd=index;content=_account_relationship_manager;${v[0]}"><i class="material-icons grey-text">chevron_right</i></a>
 							</td>
 						</tr>`;
@@ -156,19 +161,44 @@ relationshipManager = {
 	display:function(){
 		let id = window.location.hash.substring(1).split(';');
 		let data = JSON.parse(this.get(id[2]));
+		let rd = JSON.parse(regionalDirector.get()), rdList = '', rdBranch = '';
+		let rdConfirm = "";
+		let branchList = JSON.parse(branch.get()), rmBranch = '';
+		let branchLocation = system.searchJSON(branchList,0,data[9]);
+
 		sales.rm_chart(id[2]);
 		sales.rm_list(id[2]);
-		
-		let branch = (data[9] == 'branch')?'<a>Not assigned</a>':data[9];
+
+		$.each(rd,function(i,v){
+			rdBranch = system.searchJSON(branchList,0,v[0]);
+			rdBranch = (rdBranch.length>0)?rdBranch[0][1]:'Not assigned';
+			rdList += `<tr>
+							<td width='20%'><img src="../assets/images/profile/${v[10]}" alt="" class="circle responsive-img profile-image" ></td>
+							<td width='70%'>${v[1]} ${v[2]} ${v[3]}</br><small>${rdBranch}</small></td>
+							<td><a data-cmd='action_reassign' data-node='${v[0]}' class='btn-floating waves-effect waves-light right orange z-depth-0'><i class='material-icons'>folder_shared</i></a></td>
+						</tr>`;
+		})
+
+		$.each(branchList,function(i,v){
+			rmBranch += `<tr>
+							<td width='70%'>${v[1].replace('UnionBank of the Philippines ','')}</td>
+							<td><a data-cmd='action_branch' data-node='${v[0]}' class='btn-floating waves-effect waves-light right orange z-depth-0'><i class='material-icons'>account_balance</i></a></td>
+						</tr>`;
+		});
+
+		let data_branch = (data[9] == 'branch')?`<a data-cmd='modal_branch'>No branch assigned</a>`:branchLocation[0][1];
 
 		let content = `<ul class="collection">
 							<li class="collection-item avatar">
 								<img src="../assets/images/profile/avatar.png" alt="" class="circle responsive-img profile-image" >
-								<span class="title bold" style='font-size: 20px;'>${data[1]} ${data[2]} ${data[3]}</span><br/>
+								<span class="title bold" style='font-size: 20px;'>
+									${data[1]} ${data[2]} ${data[3]} 
+									<a class='tooltipped btn-floating waves-effect waves-light right orange z-depth-0' data-cmd='modal_reassign' data-position="left" data-tooltip="Reassign to Regional Director"><i class="material-icons">low_priority</i></a>
+								</span><br/>
 								<ul class="collapsible z-depth-0" data-collapsible="accordion">
 									<li>
 										<div class="collapsible-header">
-											<i class="material-icons left">location_on</i> ${branch}
+											<i class="material-icons left">location_on</i> ${data_branch}
 										</div>
 									</li>
 									<li>
@@ -209,6 +239,48 @@ relationshipManager = {
 							</li>
 						</ul>`;
 		$("#display_details .account").html(content);
+
+		$("a[data-cmd='modal_reassign']").on('click',function(){
+			$("#modal_confirm").html(`<div class='row'><h5 class="col s10 offset-s1">Select Regional Director</h5></div>
+			 							<table class='striped'>${rdList}</table>`);
+			$('#modal_confirm').modal('open');
+			relationshipManager.update_reassign(id[2])
+		});
+
+		$("a[data-cmd='modal_branch']").on('click',function(){
+			$("#modal_confirm").html(`<div class='row'><h5 class="col s10 offset-s1">Select Branch</h5></div>
+			 							<table class='striped'>${rmBranch}</table>`);
+			$('#modal_confirm').modal('open');
+			relationshipManager.update_branch(id[2])
+		});
+	},
+	update_reassign:function(id){
+		$("a[data-cmd='action_reassign']").on('click',function(e){
+			var data = system.ajax('../assets/harmony/Process.php?set-rmReassign',[id,$(this).data('node')]);
+			data.done(function(data){
+				if(data == 1){
+					Materialize.toast('Success.',4000);
+					window.location.reload();
+				}
+				else{
+					Materialize.toast('Cannot process request.',4000);
+				}
+			});
+		})
+	},
+	update_branch:function(id){
+		$("a[data-cmd='action_branch']").on('click',function(e){
+			var data = system.ajax('../assets/harmony/Process.php?update-rmBranch',[id,$(this).data('node')]);
+			data.done(function(data){
+				if(data == 1){
+					Materialize.toast('Success.',4000);
+					window.location.reload();
+				}
+				else{
+					Materialize.toast('Cannot process request.',4000);
+				}
+			});
+		})
 	}
 }
 
@@ -354,8 +426,13 @@ regionalDirector = {
 	list:function(){
 		let data = JSON.parse(this.get());
 		let content = "";
+		let branchList = JSON.parse(branch.get());
+		let branchLocation = "";
 
 		$.each(data,function(i,v){
+			branchLocation = system.searchJSON(branchList,0,v[9]);
+			branchLocation = (branchLocation.length>0)?branchLocation[0][1]:'Not assigned';
+
 			content += `<tr>
 							<td width="10%">
 								<img src="../assets/images/profile/avatar.png" class="circle left" width="35px">
@@ -364,10 +441,10 @@ regionalDirector = {
 								<span class=""> ${v[1]} ${v[2]} ${v[3]}</span>
 							</td>
 							<td width="10%">
-								${v[9]}
+								${branchLocation}
 							</td>
 							<td width="40%">
-								<a class="waves-effect waves-orange orange-text right" href="#cmd=index;content=account;${v[0]}"><i class="material-icons grey-text">chevron_right</i></a>
+								<a class="waves-effect waves-orange orange-text right" href="#cmd=index;content=_account_regional_director;${v[0]}"><i class="material-icons grey-text">chevron_right</i></a>
 							</td>
 						</tr>`;
 		});
@@ -382,7 +459,93 @@ regionalDirector = {
 		$("#display_list").html(content);
 	},
 	display:function(){
+		let id = window.location.hash.substring(1).split(';');
+		let data = JSON.parse(this.get(id[2]));
+		let managingRM = this.getManagingRM(id[2]);
+		let branchList = JSON.parse(branch.get());
+		let branchLocation = system.searchJSON(branchList,0,data[9]);
+		// sales.rm_chart(id[2]);
+		// sales.rm_list(id[2]);
 
+		console.log(managingRM);
+
+		$.each(branchList,function(i,v){
+			branchList += `<option value="${v[0]}">${v[1].replace('UnionBank of the Philippines ','')}</option>`;
+		});
+
+		let data_branch = (data[9] == 'branch')?`<div class="input-field" style='margin-top: -10PX;'>
+												<select ><option selected >Not assigned</option>${branchList}</select>
+											</div>`:branchLocation[0][1];
+
+		let content = `<ul class="collection">
+							<li class="collection-item avatar">
+								<img src="../assets/images/profile/avatar.png" alt="" class="circle responsive-img profile-image" >
+								<span class="title bold" style='font-size: 20px;'>${data[1]} ${data[2]} ${data[3]}</span><br/>
+								<ul class="collapsible z-depth-0" data-collapsible="accordion">
+									<li>
+										<div class="collapsible-header">
+											<i class="material-icons left">location_on</i> ${data_branch}
+										</div>
+									</li>
+									<li>
+										<div class="collapsible-header">
+											<i class="material-icons left">work</i> ${data[0].substring(0,6)}
+										</div>
+									</li>
+									<li>
+										<div class="collapsible-header">
+											<i class="material-icons">more_horiz</i>Other information
+										</div>
+										<div class="collapsible-body">
+											<table>
+												<tr>
+													<td class='bold'>Birthdate</td>
+													<td>${data[4]}</td>
+												</tr>
+												<tr>
+													<td class='bold'>Gender</td>
+													<td>${data[5]}</td>
+												</tr>
+												<tr>
+													<td class='bold'>Address</td>
+													<td>${data[6]}</td>
+												</tr>
+												<tr>
+													<td class='bold'>Email</td>
+													<td>${data[7]}</td>
+												</tr>
+												<tr>
+													<td class='bold'>Contact</td>
+													<td>${data[8]}</td>
+												</tr>
+											</table>
+										</div>
+									</li>
+								</ul>
+							</li>
+						</ul>`;
+		$("#display_details .account").html(content);
+		this.update(id[2])
+	},
+	update:function(id){
+		$("select").on('change',function(e){
+			var data = system.ajax('../assets/harmony/Process.php?update-rdBranch',[id,$(this).val()]);
+			data.done(function(data){
+				if(data == 1){
+					Materialize.toast('Saved.',4000);
+					window.location.reload();
+				}
+				else{
+					Materialize.toast('Cannot process request.',4000);
+				}
+			})
+		})
+	},
+	getManagingRM:function(id){
+		var data = system.html('../assets/harmony/Process.php?get-allManagingRM');
+		data.done(function(data){
+			console.log(data);
+		})
 	}
 }
 
@@ -498,7 +661,6 @@ branch = {
 		}); 
 	},
 	get:function(id){
-		console.log('d');
 		if((typeof id == null) || (id == undefined)){
 			var data = system.html('../assets/harmony/Process.php?get-allBranch');
 			return data.responseText;
