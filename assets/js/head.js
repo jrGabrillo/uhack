@@ -76,14 +76,6 @@ relationshipManager = {
 	ini:function(){
 		this.add();
 	},
-	get:function(id){
-		if(typeof id == null || typeof id == undefined){
-			// all
-		}
-		else{
-			// specific
-		}
-	},
 	add:function(){
 		$("#form_registerRM").validate({
 			rules: {
@@ -138,7 +130,7 @@ relationshipManager = {
 		$.each(data,function(i,v){
 			content += `<tr>
 							<td width="10%">
-								<img src="../assets/images/profile/avatar.png" class="circle left" width="35px">
+								<img src="../assets/images/profile/${v[10]}" class="circle left" width="35px">
 							</td>
 							<td width="40%">
 								<span class=""> ${v[1]} ${v[2]} ${v[3]}</span>
@@ -147,7 +139,7 @@ relationshipManager = {
 								${v[9]}
 							</td>
 							<td width="40%">
-								<a class="waves-effect waves-orange orange-text right" href="#cmd=index;content=account;${v[0]}"><i class="material-icons grey-text">chevron_right</i></a>
+								<a class="waves-effect waves-orange orange-text right" href="#cmd=index;content=_account_relationship_manager;${v[0]}"><i class="material-icons grey-text">chevron_right</i></a>
 							</td>
 						</tr>`;
 		});
@@ -161,6 +153,63 @@ relationshipManager = {
 						<tbody>${content}</tbody></table>`;
 		$("#display_list").html(content);
 	},
+	display:function(){
+		let id = window.location.hash.substring(1).split(';');
+		let data = JSON.parse(this.get(id[2]));
+		sales.rm_chart(id[2]);
+		sales.rm_list(id[2]);
+		
+		let branch = (data[9] == 'branch')?'<a>Not assigned</a>':data[9];
+
+		let content = `<ul class="collection">
+							<li class="collection-item avatar">
+								<img src="../assets/images/profile/avatar.png" alt="" class="circle responsive-img profile-image" >
+								<span class="title bold" style='font-size: 20px;'>${data[1]} ${data[2]} ${data[3]}</span><br/>
+								<ul class="collapsible z-depth-0" data-collapsible="accordion">
+									<li>
+										<div class="collapsible-header">
+											<i class="material-icons left">location_on</i> ${branch}
+										</div>
+									</li>
+									<li>
+										<div class="collapsible-header">
+											<i class="material-icons left">work</i> ${data[0].substring(0,6)}
+										</div>
+									</li>
+									<li>
+										<div class="collapsible-header">
+											<i class="material-icons">more_horiz</i>Other information
+										</div>
+										<div class="collapsible-body">
+											<table>
+												<tr>
+													<td class='bold'>Birthdate</td>
+													<td>${data[4]}</td>
+												</tr>
+												<tr>
+													<td class='bold'>Gender</td>
+													<td>${data[5]}</td>
+												</tr>
+												<tr>
+													<td class='bold'>Address</td>
+													<td>${data[6]}</td>
+												</tr>
+												<tr>
+													<td class='bold'>Email</td>
+													<td>${data[7]}</td>
+												</tr>
+												<tr>
+													<td class='bold'>Contact</td>
+													<td>${data[8]}</td>
+												</tr>
+											</table>
+										</div>
+									</li>
+								</ul>
+							</li>
+						</ul>`;
+		$("#display_details .account").html(content);
+	}
 }
 
 client = {
@@ -565,5 +614,75 @@ sales = {
 				}]
 			},
 		});
+	},
+	get_rm:function(id){
+		var data = system.ajax('../assets/harmony/Process.php?get-salesRM',id);
+		return data.responseText;
+	},
+	rm_chart:function(id){
+		let ctx = $("#rm_sales");
+		let chart = new Chart(ctx, {
+			type: 'line',
+			data: {
+				labels: ["Mon", "Tue", "Wed", "Thurs", "Fri", "Sat"],
+				datasets: [{
+					label: 'Sales 1',
+					data: [12, 19, 3, 5, 2, 3],
+					backgroundColor: [
+						'rgba(14, 0, 89, 0.2)',
+						'rgba(14, 0, 89, 0.2)',
+						'rgba(14, 0, 89, 0.2)',
+						'rgba(14, 0, 89, 0.2)',
+						'rgba(14, 0, 89, 0.2)',
+						'rgba(14, 0, 89, 0.2)'
+					],
+					borderColor: [
+						'rgba(14, 0, 89, 1)',
+						'rgba(14, 0, 89, 1)',
+						'rgba(14, 0, 89, 1)',
+						'rgba(14, 0, 89, 1)',
+						'rgba(14, 0, 89, 1)',
+						'rgba(14, 0, 89, 1)'
+					],
+					borderWidth: 1
+				},
+				{
+					label: 'Sales 2',
+					data: [9, 7, 11, 8, 1, 13],
+					backgroundColor: [
+						'rgba(247, 127, 0, 0.2)',
+						'rgba(247, 127, 0, 0.2)',
+						'rgba(247, 127, 0, 0.2)',
+						'rgba(247, 127, 0, 0.2)',
+						'rgba(247, 127, 0, 0.2)',
+						'rgba(247, 127, 0, 0.2)'
+					],
+					borderColor: [
+						'rgba(247, 127, 0, 1)',
+						'rgba(247, 127, 0, 1)',
+						'rgba(247, 127, 0, 1)',
+						'rgba(247, 127, 0, 1)',
+						'rgba(247, 127, 0, 1)',
+						'rgba(247, 127, 0, 1)'
+					],
+					borderWidth: 1
+				}]
+			}
+		});
+	},
+	rm_list:function(id){
+		let data = JSON.parse(this.get_rm(id));
+		let content = "";
+
+		if(data.length>0){
+
+		}
+		else{
+			content = `<div class="center">
+							<div class="divider"></div>
+							<h5>No sales</h5>
+						</div>`;
+			$("#display_listSale").html(content);
+		}
 	}
 }

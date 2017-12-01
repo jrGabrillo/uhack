@@ -146,6 +146,18 @@ $function = new DatabaseClasses;
 			print_r(json_encode($query));
 		}
 
+		if(isset($_GET['get-RM'])){
+			$data = $_POST['data'];
+			$query = $function->PDO("SELECT * FROM tbl_relationshipmanager WHERE id = '{$data}'");
+			print_r(json_encode($query[0]));
+		}
+
+		if(isset($_GET['get-salesRM'])){
+			$data = $_POST['data'];
+			$query = $function->PDO("SELECT * FROM tbl_sale WHERE rm_id = '{$data}'");
+			print_r(json_encode($query));
+		}		
+
 		if(isset($_GET['get-allClient'])){
 			$query = $function->PDO("SELECT * FROM tbl_customer");
 			print_r(json_encode($query));

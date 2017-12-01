@@ -278,3 +278,19 @@ h6{
     top: -15px;
     right: 0%;
 }
+
+#display_details .collection, .collapsible, .collapsible-body, .collapsible-header, li{
+    border:none !important;
+}
+
+#display_details .material-icons{
+    font-size: 20px;
+}
+
+#display_details .collapsible .collapsible-header, #display_details .collapsible-body, #display_details table tr td{
+    padding: 0px !important;
+}
+
+#display_details .collapsible-body{
+    margin: 0px 0px 0px 41px;
+}
