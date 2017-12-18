@@ -1,0 +1,110 @@
+<div class="section">
+	<div class="row">
+		<form id='form_registerClient' class='formValidate' method='get' action='' novalidate='novalidate'>
+			<div class='row'>
+				<div class='form-group' style="margin-bottom: 20px;">
+					<div class='input-field'>
+						<input type="checkbox" class="filled-in" id="field_newClient" name="field_newClient" data-error='.error_newClient'>
+						<label for="field_newClient" style="pointer-events: unset;">New Client</label>
+						<div class='display_error error_newClient'></div>	
+					</div>
+				</div>
+				<div class='col offset-m1 offset-l1 s12 m10 l10'>
+					<ul class="collapsible z-depth-0" data-collapsible="accordion">
+						<li>
+							<div class="collapsible-header hide"></div>
+							<div class="collapsible-body">
+								<div class='form-group'>
+									<h5>Personal Information</h5>
+									<div class='input-field'>
+										<label for='field_givenname'>Given Name: </label>
+							            <input id='field_givenname' type='text' name='field_givenname' data-error='.error_givenname'>
+										<div class='display_error error_givenname'></div>	
+									</div>
+									<div class='input-field'>
+										<label for='field_middlename'>Middle Name: </label>
+							            <input id='field_middlename' type='text' name='field_middlename' data-error='.error_middlename'>
+										<div class='display_error error_middlename'></div>	
+									</div>
+									<div class='input-field'>
+										<label for='field_familyname'>Family Name: </label>
+							            <input id='field_familyname' type='text' name='field_familyname' data-error='.error_familyname'>
+										<div class='display_error error_familyname'></div>	
+									</div>
+									<div class='input-field'>
+										<label for='field_dateofbirth' class="active">Date of Birth: </label>
+							            <input id='field_dateofbirth' type='date' name='field_dateofbirth' data-error='.error_dateofbirth' max="2000-01-01" min="1900-01-01">
+										<div class='display_error error_dateofbirth'></div>	
+									</div>
+									<div class='input-field' style="margin: 15px 0 35px 0;">
+										<label for='field_gender' class="active">Gender: </label>
+										<select id='field_gender' type='text' name='field_gender' data-error='.error_gender'>
+											<option>Male</option>
+											<option>Female</option>
+										</select>
+										<div class='display_error error_gender'></div>	
+									</div>
+									<div class='input-field'>
+										<label for='field_address'>Address: </label>
+							            <input id='field_address' type='text' name='field_address' data-error='.error_address'>
+										<div class='display_error error_address'></div>	
+									</div>
+								</div>
+								<div class='form-group'>
+									<h5>Account Information</h5>
+									<div class='input-field'>
+										<label for='field_email'>Email: </label>
+							            <input id='field_email' type='text' name='field_email' data-error='.error_email'>
+										<div class='display_error error_email'></div>	
+									</div>
+									<div class='input-field'>
+										<label for='field_contact'>Contact Number: </label>
+							            <input id='field_contact' type='text' name='field_contact' data-error='.error_contact'>
+										<div class='display_error error_contact'></div>	
+									</div>
+									<div class='input-field'>
+										<label for='field_occupation'>Occupation: </label>
+							            <input id='field_occupation' type='text' name='field_occupation' data-error='.error_occupation'>
+										<div class='display_error error_occupation'></div>	
+									</div>
+								</div>
+							</div>
+						</li>
+					</ul>
+					<div class='form-group'>
+						<div class='input-field' id='display_field_oldClientName'>
+							<label for='field_oldClientName'>Client Name</label>
+				            <input class="autocomplete" id='field_oldClientName' type='text' name='field_oldClientName' data-error='.error_oldClientName'>
+				            <div id='display_clientId' class="hide"></div>
+							<div class='display_error error_oldClientName'></div>
+						</div>
+						<h5>Schedule a meeting</h5>
+						<div class='input-field col s12 m8 l6'>
+							<label for='field_date' class="active">Date: </label>
+				            <input id='field_date' type='date' name='field_date' data-error='.error_date'>
+							<div class='display_error error_date'></div>	
+						</div>
+						<div class='input-field col s12 m4 l6'>
+							<label for='field_time' class="active">Time: </label>
+				            <input id='field_time' type='time' name='field_time' data-error='.error_time'>
+							<div class='display_error error_time'></div>	
+						</div>
+						<div class='input-field col s12'>
+							<label for='field_meetingPlace'>Place: </label>
+				            <input id='field_meetingPlace' type='text' name='field_meetingPlace' data-error='.error_meetingPlace'>
+							<div class='display_error error_meetingPlace'></div>	
+						</div>
+						<div class='input-field col s12'>
+							<button class='btn orange waves-effect waves-light right round-button z-depth-0' type='submit'>Save</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+<script type="text/javascript">
+	booking.add();
+	$('select').material_select();
+	$('.collapsible').collapsible();
+</script>

@@ -1,0 +1,39 @@
+<div class="section">
+	<div class="row">
+		<div class="col s12">
+			<form id='form_addPlan' class='formValidate' method='get' action='' novalidate='novalidate'>
+				<div class='row'>
+					<div class='col offset-m1 offset-l1 s12 m10 l10'>
+						<h5>Personal Information</h5>
+						<div class='form-group'>
+							<div class='input-field'>
+								<label for='field_plan'>Plan: </label>
+					            <input id='field_plan' type='text' name='field_plan' data-error='.error_plan'>
+								<div class='error_plan'></div>	
+							</div>
+							<div class='input-field'>
+								<label for='field_description'>Description: </label>
+								<textarea id='field_description' type='text' name='field_description' data-error='.error_description' class="materialize-textarea" data-length="900"></textarea>
+								<div class='error_name'></div>	
+							</div>
+							<div class='input-field'>
+								<label for='field_price'>Price: </label>
+					            <input id='field_price' type='number' name='field_price' data-error='.error_price' max="1000000">
+								<div class='error_price'></div>	
+							</div>
+							<div class='row'>
+								<div class='input-field col s12'>
+									<button class='btn orange waves-effect waves-light right round-button z-depth-0' type='submit'>Save</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	plan.ini();
+	$('textarea').characterCounter();
+</script>

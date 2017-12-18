@@ -157,6 +157,7 @@ login = {
 				var data = system.ajax('assets/harmony/Process.php?login',_form);
 				data.done(function(data){
 					data = JSON.parse(data);
+					console.log(data);
 					if(data[0] == 'Active'){
 						localStorage.setItem("hash",data[1]);
 						Materialize.toast('Success. Please wait.',4000,'',function(){

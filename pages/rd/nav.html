@@ -1,50 +1,71 @@
-<nav>
-    <div class="nav-wrapper">
-        <ul class="left">
-            <li class="">
-                <a href="#" data-activates="side-menu" class="white-text sidebar-collapse btn-medium waves-effect waves-light hide-on-large-only cyan">
-                    <i class="material-icons">menu</i>
-                </a>
-            </li>
-            <li class="">
-                <a>Employer</a>
-            </li>
-        </ul>        
-    </div>
+<nav class="z-depth-0">
+	<div class="nav-wrapper indigo darken-4 ">
+		<ul class="left">
+			<li class="">
+				<a href="#" data-activates="side-menu" class="white-text sidebar-collapse btn-medium waves-effect waves-light hide-on-large-only cyan">
+					<i class="material-icons ">menu</i>
+				</a>
+			</li>
+			<li class="">
+				<a href="#" data-activates="side-menu" class="white-text waves-effect waves-light"><i class="material-icons left hide-on-med-and-down">menu</i><span id='display_page'>dashboard</span></a>      
+			</li>
+		</ul>        
+	</div>
 </nav>
 <aside id="left-sidebar-nav text-red">
-    <ul id="side-menu" class="side-nav fixed leftside-navigation ps-container ps-active-y animated" style="width: 240px;">
-        <li class="user-details red darken-1" id='user-account' style='padding-top: 10px;'>
-            <div class="row">
-                <div class="col col s4 m4 l4">
-                    <img src="../assets/images/avatar.jpg" alt="" class="circle responsive-img valign profile-image">
-                </div>
-                <div class="col col s8 m8 l8">
-                    <a class='waves-effect waves-light white-text profile-btn'  data-activates='account'>
-                        <span>Employer</span>
-                        <i class='mdi-navigation-arrow-drop-down right'></i>
-                    </a>
-                </div>
-            </div>
-        </li>
-        <li class="no-padding">
-            <ul class="collapsible collapsible-accordion">
-                <li class="">
-                    <a href="#cmd=index;content=account" class="waves-effect waves-blue black-text"><i class="material-icons">account_circle</i> Account</a>
-                </li>
-                <!-- <li class="">
-                    <a href="#cmd=index;content=list_points" class="waves-effect waves-blue black-text"><i class="icon settings"></i> Points</a>
-                </li> -->
-                <li class="">
-                    <a href="#cmd=index;content=employee" class="waves-effect waves-blue black-text"><i class="material-icons">group</i> Employee</a>
-                </li>
-                <!-- <li class="">
-                    <a href="#cmd=index;content=messages" class="waves-effect waves-blue black-text"><i class="icon settings"></i> Messages</a>
-                </li> -->
-                <li class="">
-                    <a id='log-out' class="waves-effect waves-black black-text"><i class="material-icons">exit_to_app</i> Sign out</a>
-                </li>
-            </ul>
-        </li>
-    </ul>
+	<ul id="side-menu" class="side-nav fixed leftside-navigation ps-container ps-active-y animated grey lighten-4 z-depth-0" style="width: 240px; ">
+		<li class="center" id='user-account' style='padding-top: 80px; padding-bottom: 10px;'>
+			<div class="row" style='margin-bottom: 0px !important;'>
+				<div class="col s12">
+					<img src="../assets/images/avatar.jpg" alt="" class="circle responsive-img profile-image" style="float: center; width:50%;" />
+				</div>
+				<div class="col s12">
+					<a class='waves-effect waves-light black-text'  data-activates='account'>
+						<span class="bold display_name">Administrator</span>
+					</a>
+				</div>
+			</div>
+		</li>
+		<li class="no-padding">
+			<ul class="collapsible collapsible-accordion">
+				<li class="">
+					<a class="waves-effect waves-orange orange-text" href="#cmd=index;content=_dashboard"><i class="material-icons orange-text hide">account_circle</i> Dashboard</a>
+				</li>
+				<li class="">
+					<a class="waves-effect waves-orange orange-text" href="#cmd=index;content=_sales"><i class="material-icons orange-text hide">monetization_on</i> Sales</a>
+				</li>
+				<li class="no-padding">
+					<ul class="collapsible collapsible-accordion ">
+						<li class="bold">
+							<a class="collapsible-header waves-effect waves-cyan waves-orange orange-text" style="padding:0 32px;"><i class="material-icons orange-text hide">store</i> Relationship Mngr <i class="material-icons right orange-text" style="margin: 0px;">arrow_drop_down</i></a>
+							<div class="collapsible-body" style="display: none;">
+								<ul class="grey lighten-3">
+									<li><a href="#cmd=index;content=_relationship_manager"><i class="material-icons orange-text"></i>- List</a></li>
+									<li><a href='#cmd=index;content=_add_relationship_manager'><i class="material-icons orange-text"></i>- Add</a></li>
+								</ul>
+							</div>
+						</li>
+					</ul>
+				</li>
+				<li class="no-padding">
+					<ul class="collapsible collapsible-accordion ">
+						<li class="bold">
+							<a class="collapsible-header waves-effect waves-cyan waves-orange orange-text" style="padding:0 32px;"><i class="material-icons orange-text hide">store</i>Plans <i class="material-icons right orange-text" style="margin: 0px;">arrow_drop_down</i></a>
+							<div class="collapsible-body" style="display: none;">
+								<ul class="grey lighten-3">
+									<li><a href="#cmd=index;content=_plans"><i class="material-icons orange-text"></i>- List</a></li>
+								</ul>
+							</div>
+						</li>
+					</ul>
+				</li>
+				<li class="">
+					<a class="waves-effect waves-orange orange-text" id='log-out' style="line-height: 42px;"><i class="material-icons orange-text hide">exit_to_app</i> Logout</a>
+				</li>
+			</ul>            
+		</li>
+	</ul>
 </aside>
+<script>
+	account.ini();
+</script>

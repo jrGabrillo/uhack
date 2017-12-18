@@ -16,10 +16,11 @@
         <link href="../assets/css/plugins/dataTables/dataTables.tableTools.min.css" type="text/css" rel="stylesheet" media="screen,projection">
         <link href="../assets/css/plugins/dataTables/dataTables.material.min.css" type="text/css" rel="stylesheet" media="screen,projection">
         <link href="../assets/css/perfect-scrollbar.css" type="text/css" rel="stylesheet" media="screen,projection">
+        <link href="../assets/css/fullcalendar.min.css" rel="stylesheet">
         <link href="../assets/css/original.materialize.min.css" rel="stylesheet">
+        <link href="../assets/css/animate.css" rel="stylesheet">
         <link href="../assets/css/custom.css" rel="stylesheet">
         <link href="../assets/css/style.css" rel="stylesheet">
-        <link href="../assets/css/animate.css" rel="stylesheet">
     </head>
 
     <body>
@@ -71,24 +72,24 @@
         <script src="../assets/js/dataTables/dataTables.responsive.js"></script>
         <script src="../assets/js/dataTables/dataTables.tableTools.min.js"></script>
         <script src="../assets/js/dataTables/dataTables.material.min.js"></script>
+        <script src="../assets/js/moment-with-locales.js"></script>
+        <script src="../assets/js/fullcalendar.min.js"></script>
         <script src="../assets/js/chart.min.js"></script>
         <script src="../assets/js/plugins.js"></script>
         <script src="../assets/js/process.js"></script>
         <script>
-            // $('.modal').modal();
-            system.ini();
-            // login.check();
-            App.init();
-            system.forceLogout(function(){
-                login.kill();
-            });
-
-            const ps = new PerfectScrollbar('.ps-container', {
-                wheelSpeed: 1,
-                wheelPropagation: true,
-                minScrollbarLength: 10
-            });
-
+            $(document).on('ready',function(){
+                system.ini();
+                App.init();
+                system.forceLogout(function(){
+                    login.kill();
+                });
+                const ps = new PerfectScrollbar('.ps-container', {
+                    wheelSpeed: 1,
+                    wheelPropagation: true,
+                    minScrollbarLength: 10
+                });
+            })
         </script>
     </body>
 </html>

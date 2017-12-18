@@ -136,6 +136,16 @@ $function = new DatabaseClasses;
 			print_r(json_encode($query));
 		}
 
+		if(isset($_GET['get-accountRM'])){
+			$query = $function->PDO("SELECT * FROM tbl_account as a INNER JOIN tbl_relationshipmanager as b ON a.email = b.email WHERE a.email = '{$_SESSION['uhack'][0]}'");
+			print_r(json_encode($query));
+		}
+
+		if(isset($_GET['get-accountRD'])){
+			$query = $function->PDO("SELECT * FROM tbl_account as a INNER JOIN tbl_regionaldirector as b ON a.email = b.email WHERE a.email = '{$_SESSION['uhack'][0]}'");
+			print_r(json_encode($query));
+		}
+
 		if(isset($_GET['get-allRD'])){
 			$query = $function->PDO("SELECT * FROM tbl_regionaldirector");
 			print_r(json_encode($query));
@@ -164,8 +174,60 @@ $function = new DatabaseClasses;
 			print_r(json_encode($query));
 		}		
 
+		if(isset($_GET['get-bookingByRM'])){
+			$data = $_POST['data'];
+
+			$query = $function->PDO("SELECT tbl_customer.id, tbl_booking.scheduled_date, tbl_booking.scheduled_time, tbl_booking.meeting_place, tbl_customer.given_name, tbl_customer.family_name, tbl_customer.contact_number FROM tbl_booking INNER JOIN tbl_customer ON tbl_booking.customer_id = tbl_customer.id WHERE tbl_booking.rm_id = '{$data[0]}'");
+			print_r(json_encode($query));
+		}		
+
+		if(isset($_GET['get-bookingByRMToday'])){
+			$data = $_POST['data'];
+
+			$query = $function->PDO("SELECT tbl_customer.id, tbl_booking.scheduled_date, tbl_booking.scheduled_time, tbl_booking.meeting_place, tbl_customer.given_name, tbl_customer.family_name, tbl_customer.contact_number FROM tbl_booking INNER JOIN tbl_customer ON tbl_booking.customer_id = tbl_customer.id WHERE tbl_booking.rm_id = '{$data[0]}' AND tbl_booking.scheduled_date = '{$data[1]}'");
+			print_r(json_encode($query));
+		}
+
+		if(isset($_GET['get-salesByDates'])){
+			$data = $_POST['data'];
+			$query = $function->PDO("SELECT date_format(date_acquired,'%Y-%m-%d') as _date, COUNT(*) FROM tbl_sale WHERE rm_id = '{$data[0]}' AND date_acquired BETWEEN '{$data[1][0]} 00:00' AND '{$data[1][1]} 24:00' GROUP By _date");
+
+			print_r(json_encode($query));
+		}
+
+		if(isset($_GET['get-salesByMonths'])){
+			$data = $_POST['data'];
+			$query = $function->PDO("SELECT date_format(date_acquired,'%M') as _date, COUNT(*) FROM tbl_sale WHERE rm_id = '{$data[0]}' AND date_acquired BETWEEN '{$data[1][0]} 00:00' AND '{$data[1][1]} 24:00' GROUP By _date");
+			print_r(json_encode($query));
+		}
+
+		if(isset($_GET['get-salesByWeek'])){
+			$data = $_POST['data'];
+			$query = $function->PDO("SELECT date_format(date_acquired,'%W') as _date, COUNT(*) FROM tbl_sale WHERE rm_id = '{$data[0]}' AND date_acquired BETWEEN '{$data[1][0]} 00:00' AND '{$data[1][1]} 24:00' GROUP By _date");
+			print_r(json_encode($query));
+		}
+
+		if(isset($_GET['get-salesToday'])){
+			$data = $_POST['data'];
+			$query = $function->PDO("SELECT date_format(date_acquired,'%Y-%m-%d %k:%i') as _date, COUNT(*) FROM tbl_sale WHERE rm_id = '{$data[0]}' AND date_acquired BETWEEN '{$data[1]} 00:00' AND '{$data[1]} 24:00' GROUP By _date");
+
+			print_r(json_encode($query));
+		}
+
 		if(isset($_GET['get-allClient'])){
 			$query = $function->PDO("SELECT * FROM tbl_customer");
+			print_r(json_encode($query));
+		}
+
+		if(isset($_GET['get-allClientByRM'])){
+			$data = $_POST['data'];
+			$query = $function->PDO("SELECT * FROM tbl_customer WHERE added_by = '{$data}'");
+			print_r(json_encode($query));
+		}
+
+		if(isset($_GET['get-listAccountRMByRD'])){
+			$data = $_POST['data'];
+			$query = $function->PDO("SELECT * FROM tbl_relationshipmanager WHERE branch_id = '{$data}'");
 			print_r(json_encode($query));
 		}
 
@@ -175,8 +237,21 @@ $function = new DatabaseClasses;
 			print_r(json_encode($query));
 		}
 
+		if(isset($_GET['get-searchClient'])){
+			$data = $_POST['data'];
+			$query = $function->PDO("SELECT id,given_name,middle_name,family_name,picture FROM tbl_customer WHERE given_name LIKE '{$data}%' OR middle_name LIKE '{$data}%' OR family_name LIKE '{$data}%' LIMIT 10");
+			print_r(json_encode($query));
+		}
+
 		if(isset($_GET['get-allPlans'])){
 			$query = $function->PDO("SELECT * FROM tbl_plan");
+			print_r(json_encode($query));
+		}
+
+		if(isset($_GET['get-purchasedPlan'])){
+			$data = $_POST['data'];
+			$query = $function->PDO("SELECT * FROM tbl_sale INNER JOIN tbl_plan ON tbl_sale.id = tbl_plan.id WHERE tbl_sale.customer_id = '{$data}' ORDER BY tbl_sale.date_acquired DESC");
+
 			print_r(json_encode($query));
 		}
 
@@ -198,7 +273,6 @@ $function = new DatabaseClasses;
 			$data = $_POST['data'];
 			$password = $function->password($data[8]['value']);
 
-			print_r($data);
 			$query = $function->PDO("INSERT INTO tbl_regionaldirector(id,given_name,middle_name,family_name,date_of_birth,gender,address,email,contact_number,branch_id,picture,status,date_registered) VALUES ('{$id}','{$data[0]['value']}','{$data[1]['value']}','{$data[2]['value']}','{$data[3]['value']}','{$data[4]['value']}','{$data[5]['value']}','{$data[7]['value']}','{$data[6]['value']}','branch','avatar.png','1','{$date}'); INSERT INTO tbl_account(id,email,password,account_id,category,status) VALUES ('{$id}','{$data[7]['value']}','{$password}','{$id}',2,1);");
 			if($query->execute()){
 				echo 1;
@@ -240,12 +314,59 @@ $function = new DatabaseClasses;
 			}
 		}
 
+		if(isset($_GET['set-newClientByRM'])){
+	        $id_customer = $function->PDO_IDGenerator('tbl_customer','id');
+	        $id_booking = $function->PDO_IDGenerator('tbl_booking','id');
+			$date = $function->PDO_DateAndTime();
+			$data = $_POST['data'];
+
+			$query = $function->PDO("INSERT INTO tbl_customer(id,given_name,middle_name,family_name,date_of_birth,gender,address,email,contact_number,occupation,picture,status,date_registered) VALUES ('{$id_customer}','{$data[1][1]['value']}','{$data[1][2]['value']}','{$data[1][3]['value']}','{$data[1][4]['value']}','{$data[1][5]['value']}','{$data[1][6]['value']}','{$data[1][7]['value']}','{$data[1][8]['value']}','{$data[1][9]['value']}','avatar.png','1','{$date}'); INSERT INTO tbl_booking(id,rm_id,customer_id,scheduled_date,scheduled_time,meeting_place,date_added,status) VALUES ('{$id_booking}','{$data[0]}','{$id_customer}','{$data[1][11]['value']}','{$data[1][12]['value']}','{$data[1][13]['value']}','{$date}','1');");
+			if($query->execute()){
+				echo 1;
+			}
+			else{
+				$Data = $query->errorInfo();
+				print_r($Data);
+			}
+		}
+
+		if(isset($_GET['set-clientBooking'])){
+	        $id = $function->PDO_IDGenerator('tbl_booking','id');
+			$date = $function->PDO_DateAndTime();
+			$data = $_POST['data'];
+
+			$query = $function->PDO("INSERT INTO tbl_booking(id,rm_id,customer_id,scheduled_date,scheduled_time,meeting_place,date_added,status) VALUES ('{$id}','{$data[0]}','{$data[1]}','{$data[2]}','{$data[3]}','{$data[4]}','{$date}','1');");
+			if($query->execute()){
+				echo 1;
+			}
+			else{
+				$Data = $query->errorInfo();
+				print_r($Data);
+			}
+		}
+
 		if(isset($_GET['set-newPlan'])){
 	        $id = $function->PDO_IDGenerator('tbl_plan','id');
 			$date = $function->PDO_DateAndTime();
 			$data = $_POST['data'];
-			print_r($data);
 			$query = $function->PDO("INSERT INTO tbl_plan(id,title,description,price) VALUES ('{$id}','{$data[0]['value']}','{$data[1]['value']}','{$data[2]['value']}');");
+			if($query->execute()){
+				echo 1;
+			}
+			else{
+				$Data = $query->errorInfo();
+				print_r($Data);
+			}
+		}
+
+		if(isset($_GET['avail-plan'])){
+	        $id = $function->PDO_IDGenerator('tbl_sale','id');
+			$date = $function->PDO_DateAndTime();
+			$data = $_POST['data'];
+			$user = $_SESSION['uhack'];
+			$u_id = $function->PDO("SELECT * FROM tbl_account WHERE email = '{$user[0]}'");
+
+			$query = $function->PDO("INSERT INTO tbl_sale(id,plan_id,customer_id,rm_id,date_acquired, status) VALUES ('{$id}','{$data[1]}','{$data[0]}','{$u_id[0][0]}','{$date}','1');");
 			if($query->execute()){
 				echo 1;
 			}

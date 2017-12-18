@@ -302,3 +302,14 @@ h6{
 #display_details .dropdown-content{
     width:200% !important;
 }
+
+#form_registerClient .collapsible-body{
+    padding: unset !important;
+    border-bottom: unset !important;
+}
+
+#form_registerClient .collapsible{
+    border-top: unset !important; 
+    border-right: unset !important; 
+    border-left: unset !important; 
+}

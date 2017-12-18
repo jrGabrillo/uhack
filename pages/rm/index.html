@@ -1,25 +1,32 @@
-<section id="subcontent"></section>
-<script src="../assets/js/employee.js"></script>
+<div class="row" style="margin-bottom: unset;">
+	<div class="col s12 m8 l8" style="min-height: 600px; border-right: 1px solid #ccc;"><section id="subcontent"></section></div>
+	<div class='col s12 m4 l4' id='display_side'>
+		<div class="section">
+			<div class="row">
+				<div class="col s12">
+					<h5>Sales this week</h5>
+					<div class="chart-container">
+						<div id="chart_weekSales"><canvas></canvas></div>
+					</div>
+				</div>
+				<div class="col s12">
+					<div class="divider"></div>
+					<div id='display_rm_appointment'>
+						<h6>Today's appointment</h6>
+						<table class="bordered"></table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="../assets/js/rm.js"></script>
 <script>
-    var count = 0;
-    login.check();
-    account.ini();
+    login.ini();
+	sales.display_weekChart();
+	booking.getTodaysAppointment();
     $("#log-out").on("click",function(){
         login.kill();
-    });
-
-    $("#showMenu").on("click",function(){
-        count++;
-        $("#slide-out").attr({"style":"width: 240px; left: 0px;top: 64px !important;"});
-        if((count%2)==1){
-            $("#slide-out").removeClass('slideOutLeft').addClass('slideInLeft');
-        }
-        else{
-            $("#slide-out").removeClass('slideInLeft').addClass('slideOutLeft');
-        }
-    });
-
-    var documentHeight = $(window).height();
-    $("#subcontent").attr({"style":"min-height:"+documentHeight+"px;"});
+    })
     $(".dropdown-button").dropdown();
 </script>

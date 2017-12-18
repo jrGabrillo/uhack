@@ -371,6 +371,10 @@ client = {
 	display:function(){
 		let id = window.location.hash.substring(1).split(';');
 		let data = JSON.parse(this.get(id[2]));
+
+		let plans = JSON.parse(this.getPlan(id[2]));
+		// this.listPlan(plans);
+
 		let content = `<ul class="collection">
 							<li class="collection-item avatar">
 								<img src="../assets/images/profile/avatar.png" alt="" class="circle responsive-img profile-image" >
@@ -407,13 +411,29 @@ client = {
 								</ul>
 							</li>
 						</ul>`;
+
 		$("#display_details .account").html(content);
-	},
-	getPlan:function(){
+		$("#display_addPlan").html(`<button data-cmd='modal_addPlan' data-node='${id[2]}' class='btn orange waves-effect waves-light right round-button z-depth-0' type='submit'>Add Plan</button>`);
+		
 
+		plan.check(id[2]);
 	},
-	listPlan:function(){
+	getPlan:function(id){
+		var data = system.ajax('../assets/harmony/Process.php?get-purchasedPlan',id);
+		return data.responseText;
+	},
+	listPlan:function(data){
+		if(data.length>0){
 
+		}
+		else{
+			content = `<div class="center">
+							<div class="divider"></div>
+							<h5>No plans</h5>
+						</div>`;
+		}
+
+		$("#display_listPlan").html(content);
 	}
 }
 
@@ -705,6 +725,38 @@ plan = {
 						<tbody>${content}</tbody></table>`;
 		$("#display_list").html(content);
 	},
+	check:function(id){
+		let content = "";
+		let allplans = JSON.parse(this.get());
+
+		$.each(allplans,function(i,v){
+			content += `<tr>
+							<td width='70%'>${v[1]}</br><small>${v[3]}</small></td>
+							<td><a data-cmd='action_avail' data-node='${v[0]}' class='btn-floating waves-effect waves-light right orange z-depth-0'><i class='material-icons'>check</i></a></td>
+						</tr>`;
+		});
+
+		$("button[data-cmd='modal_addPlan']").on('click',function(){
+			$("#modal_confirm").html(`<div class='row'><h5 class="col s10 offset-s1">Select Plan</h5></div>
+			 							<table class='striped'>${content}</table>`);
+			$('#modal_confirm').modal('open');
+			plan.avail(id);
+		});
+	},
+	avail:function(id){
+		$("a[data-cmd='action_avail']").on('click',function(e){
+			var data = system.ajax('../assets/harmony/Process.php?avail-plan',[id,$(this).data('node')]);
+			data.done(function(data){
+				if(data == 1){
+					Materialize.toast('Success.',4000);
+					window.location.reload();
+				}
+				else{
+					Materialize.toast('Cannot process request.',4000);
+				}
+			});
+		})
+	}
 }
 
 branch = {

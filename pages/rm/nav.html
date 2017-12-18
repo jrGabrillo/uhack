@@ -1,49 +1,55 @@
-<nav>
-	<div class="nav-wrapper">
+<nav class="z-depth-0">
+	<div class="nav-wrapper indigo darken-4 ">
 		<ul class="left">
 			<li class="">
-				<a data-activates="side-menu" class="sidebar-collapse btn-medium waves-effect waves-light hide-on-large-only cyan">
-				    <i class="material-icons">menu</i>
+				<a href="#" data-activates="side-menu" class="white-text sidebar-collapse btn-medium waves-effect waves-light hide-on-large-only cyan">
+					<i class="material-icons ">menu</i>
 				</a>
 			</li>
-		</ul>        
-		<ul class="right">
-			<li class="red white-text">
-				<a href="#" id='display_points' class="white-text" style="font-size: 30px;"><span>0</span> <small style="font-size: 50%;">points</small></a>
+			<li class="">
+				<a href="#" data-activates="side-menu" class="white-text waves-effect waves-light"><i class="material-icons left hide-on-med-and-down">menu</i><span id='display_page'>dashboard</span></a>      
 			</li>
 		</ul>        
 	</div>
 </nav>
 <aside id="left-sidebar-nav text-red">
-    <ul id="side-menu" class="side-nav fixed leftside-navigation ps-container ps-active-y animated" style="width: 240px;">
-        <li class="user-details red darken-1" id='user-account' style='padding-top: 10px;'>
-            <div class="row">
-                <div class="col col s4 m4 l4">
-                    <img src="../assets/images/avatar.jpg" alt="" class="circle responsive-img valign profile-image">
-                </div>
-                <div class="col col s8 m8 l8">
-                    <span class="display_name white-text bold">Employee</span>
-                </div>
-            </div>
-        </li>
-        <li class="no-padding" id='navigation'>
+	<ul id="side-menu" class="side-nav fixed leftside-navigation ps-container ps-active-y animated grey lighten-4 z-depth-0" style="width: 240px; ">
+		<li class="center" id='user-account' style='padding-top: 80px; padding-bottom: 10px;'>
+			<div class="row" style='margin-bottom: 0px !important;'>
+				<div class="col s12">
+					<img src="../assets/images/avatar.jpg" alt="" class="circle responsive-img profile-image" style="float: center; width:50%;" />
+				</div>
+				<div class="col s12">
+					<a class='waves-effect waves-light black-text'  data-activates='account'>
+						<span class="bold display_name">Relationship Manager</span>
+					</a>
+				</div>
+			</div>
+		</li>
+		<li class="no-padding">
 			<ul class="collapsible collapsible-accordion">
-			    <li class="">
-			        <a href='../account/#cmd=index;content=account' class="waves-effect waves-black black-text"><i class="material-icons">account_circle</i> Account</a>
-			    </li>
-			    <li class="">
-			        <a href='../sale.html' class="waves-effect waves-blue black-text"><i class="material-icons">shopping_basket</i> Shop now</a>
-			    </li>
-			    <li class="">
-			        <a href='../account/#cmd=index;content=list_points' class="waves-effect waves-black black-text"><i class="material-icons">assessment</i> Activity</a>
-			    </li>
-			    <li class="">
-			        <a id='log-out' class="waves-effect waves-black black-text"><i class="material-icons">exit_to_app</i> Sign out</a>
-			    </li>
-			</ul>
-        </li>
-    </ul>
+				<li>
+					<a class="waves-effect waves-orange orange-text" href="#cmd=index;content=_dashboard"><i class="material-icons orange-text hide">account_circle</i> Dashboard</a>
+				</li>
+				<li>
+					<a class="waves-effect waves-orange orange-text" href="#cmd=index;content=_booking"><i class="material-icons orange-text hide">monetization_on</i> Booking</a>
+				</li>
+				<li>
+					<a class="waves-effect waves-orange orange-text" href="#cmd=index;content=_sales"><i class="material-icons orange-text hide">monetization_on</i> Sales</a>
+				</li>
+				<li>
+					<a class="waves-effect waves-orange orange-text" href="#cmd=index;content=_clients"><i class="material-icons orange-text hide">store</i>Clients </a>
+				</li>
+				<li>
+					<a class="waves-effect waves-orange orange-text" href="#cmd=index;content=_plans"><i class="material-icons orange-texts hide"></i>Plans</a>
+				</li>
+				<li>
+					<a class="waves-effect waves-orange orange-text" id='log-out' style="line-height: 42px;"><i class="material-icons orange-text hide">exit_to_app</i> Logout</a>
+				</li>
+			</ul>            
+		</li>
+	</ul>
 </aside>
 <script>
-    account.ini();
+	account.ini();
 </script>
