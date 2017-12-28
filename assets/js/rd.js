@@ -243,13 +243,13 @@ relationshipManager = {
     display:function(){
         let id = window.location.hash.substring(1).split(';');
         let data = JSON.parse(this.get(id[2]));
-        let rd = JSON.parse(regionalDirector.get()), rdList = '', rdBranch = '';
+        let rd = JSON.parse(branch.get()), rdList = '', rdBranch = '';
         let rdConfirm = "";
         let branchList = JSON.parse(branch.get()), rmBranch = '';
         let branchLocation = system.searchJSON(branchList,0,data[9]);
 
-        sales.rm_chart(id[2]);
-        sales.rm_list(id[2]);
+        // sales.rm_chart(id[2]);
+        // sales.rm_list(id[2]);
 
         $.each(rd,function(i,v){
             rdBranch = system.searchJSON(branchList,0,v[0]);
@@ -735,22 +735,22 @@ sales = {
         });
     },
     barchart: function() {
-        let ctx = $("#chart_totalSales");
-        let chart = new Chart(ctx,{
-            type: 'bar',
-            data: {
-                labels: ["M", "T", "W", "Th", "F", "S"],
-                datasets: [{
-                    label: 'Sales 1',
-                    data: [12, 19, 3, 5, 2, 3],
-                    backgroundColor: 'rgba(14, 0, 89, 1)',
-                }, {
-                    label: 'Sales 2',
-                    data: [9, 7, 11, 8, 1, 13],
-                    backgroundColor: 'rgba(247, 127, 0, 1)',
-                }]
-            },
-        });
+        // let ctx = $("#chart_totalSales");
+        // let chart = new Chart(ctx,{
+        //     type: 'bar',
+        //     data: {
+        //         labels: ["M", "T", "W", "Th", "F", "S"],
+        //         datasets: [{
+        //             label: 'Sales 1',
+        //             data: [12, 19, 3, 5, 2, 3],
+        //             backgroundColor: 'rgba(14, 0, 89, 1)',
+        //         }, {
+        //             label: 'Sales 2',
+        //             data: [9, 7, 11, 8, 1, 13],
+        //             backgroundColor: 'rgba(247, 127, 0, 1)',
+        //         }]
+        //     },
+        // });
     },
     get: function(data) {
         var result = system.ajax('../assets/harmony/Process.php?get-salesByDates', data);
@@ -1032,5 +1032,346 @@ booking = {
        			$("#display_rm_appointment").html('<h6>You have no appointment today.</h6>');
        		}
        	});
+    }
+}
+
+account_rm = {
+    id:function(){
+        let id = window.location.hash.substring(1).split(';');
+        return id[2];
+    },
+    sales:{
+        ini:function(){
+            account_rm.sales.display_todayChart();
+            account_rm.sales.display_weekChart();
+            account_rm.sales.display_monthChart();
+            account_rm.sales.display_yearChart();
+            account_rm.sales.display_customChart();
+            $('.tooltipped').tooltip({delay: 50});
+        },
+        linechart: function(dom,label,title,data) {
+            let ctx = $(dom);
+            let chart = new Chart(ctx,{
+                type: 'line',
+                data: {
+                    labels: label,
+                    datasets: [{
+                        label: title,
+                        data: data,
+                        backgroundColor: ['rgba(14, 0, 89, 0.2)'],
+                        borderColor: ['rgba(14, 0, 89, 1)'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
+        },
+        barchart: function() {
+            let ctx = $("#chart_totalSales");
+            let chart = new Chart(ctx,{
+                type: 'bar',
+                data: {
+                    labels: ["M", "T", "W", "Th", "F", "S"],
+                    datasets: [{
+                        label: 'Sales 1',
+                        data: [12, 19, 3, 5, 2, 3],
+                        backgroundColor: 'rgba(14, 0, 89, 1)',
+                    }, {
+                        label: 'Sales 2',
+                        data: [9, 7, 11, 8, 1, 13],
+                        backgroundColor: 'rgba(247, 127, 0, 1)',
+                    }]
+                },
+            });
+        },
+        get: function(data) {
+            var result = system.ajax('../assets/harmony/Process.php?get-salesByDates', data);
+            return result.responseText;
+        },
+        display_customChart: function() {
+            let rm_data = account_rm.id();
+            let now_date = moment().format("YYYY-MM-DD");
+            $("#field_dateFrom").attr({"max": now_date});
+            $("#form_registerClient").on('change', function() {
+                let data = $(this).serializeArray();
+                $("#field_dateTo").attr({min: data[0]['value']});
+                if ((data[0]['value'] != '') && (data[1]['value'] != '')) {
+                    let result = JSON.parse(sales.get([rm_data,[data[0]['value'],data[1]['value']]]));
+                    let _dateDiff = moment.duration(moment(data[1]['value']).diff(moment(data[0]['value'])));
+
+                    var from = new Date(data[0]['value']);
+                    var to = new Date(data[1]['value']);
+                    let label = [], value = [];
+                    for (var day = from; day <= to; day.setDate(day.getDate() + 1)) {
+                        var a = system.searchJSON(result,0,moment(day).format("YYYY-MM-DD"));
+                        if(a.length>0){
+                            label.push(moment(a[0][0]).format("MMM-DD"));
+                            value.push(a[0][1]);
+                        }
+                        else{
+                            label.push(moment(day).format("MMM-DD"));
+                            value.push(0);
+                        }
+                    }
+                    sales.linechart("#chart_sales",label,'Sales: ',value);
+                }
+            });
+        },
+        display_todayChart: function(){
+            let rm_data = account_rm.id();
+            let now_date = moment().format("YYYY-MM-DD");
+
+            let result = system.ajax('../assets/harmony/Process.php?get-salesToday', [rm_data,now_date]);
+            result.done(function(data){
+                let result = JSON.parse(data);
+                console.log(result);
+                let time = "";
+                let _label = [], _data = [];
+                for (let hour = 1; hour <= 23; hour++) {
+                    for(let minute = 0; minute <= 59; minute++){
+                        time = moment().format("YYYY-MM-DD HH:mm");
+                        var a = system.searchJSON(result,0,time);
+                        if(a.length>0){
+                            _label.push(moment(a[0][0]).format("HH:mm"));
+                            _data.push(a[0][1]);
+                        }
+                        else{
+                            _label.push(moment(time).format("HH:mm"));
+                            _data.push(0);
+                        }
+                    }
+                }
+                sales.linechart("#chart_todaySales canvas",_label,'Sales: ',_data);
+            });
+        },
+        display_weekChart: function(){
+            let rm_data = account_rm.id();
+            let startWeek = moment().startOf('week').format("YYYY-MM-DD"), endWeek = moment().endOf('week').format("YYYY-MM-DD");
+            let label = [], value = [];
+
+            let result = system.ajax('../assets/harmony/Process.php?get-salesByWeek', [rm_data,[startWeek,endWeek]]);
+            result.done(function(data){
+                let label = [], value = [];
+                let result = JSON.parse(data);
+                $.each(moment.weekdays(),function(i,v){
+                    var a = system.searchJSON(result,0,v);
+                    if(a.length>0){
+                        label.push(a[0][0]);
+                        value.push(a[0][1]);
+                    }
+                    else{
+                        label.push(v);
+                        value.push(0);
+                    }
+                });
+
+                sales.linechart("#chart_weekSales canvas",label,'Sales: ',value);
+            });
+        },
+        display_monthChart: function(){
+            let rm_data = account_rm.id();
+            let startofMonth = moment().startOf('month').format("YYYY-MM-DD");
+            let endofMonth = moment().endOf("month").format("YYYY-MM-DD");
+
+            let result = JSON.parse(sales.get([rm_data,[startofMonth,endofMonth]]));
+            let _dateDiff = moment.duration(moment(endofMonth).diff(moment(startofMonth)));
+
+            var from = new Date(startofMonth);
+            var to = new Date(endofMonth);
+            let label = [], value = [];
+            for (var day = from; day <= to; day.setDate(day.getDate() + 1)) {
+                var a = system.searchJSON(result,0,moment(day).format("YYYY-MM-DD"));
+                if(a.length>0){
+                    label.push(moment(a[0][0]).format("MMM-DD"));
+                    value.push(a[0][1]);
+                }
+                else{
+                    label.push(moment(day).format("MMM-DD"));
+                    value.push(0);
+                }
+            }
+            sales.linechart("#chart_monthSales canvas",label,'Sales: ',value);
+        },
+        display_yearChart: function(){
+            let rm_data = account_rm.id();
+            let now_date = moment().format("YYYY-MM-DD");
+            let startofYear = moment().startOf('year').format("YYYY-MM-DD");
+            let endofYear = moment().endOf("year").format("YYYY-MM-DD");
+
+            let result = system.ajax('../assets/harmony/Process.php?get-salesByMonths', [rm_data,[startofYear,endofYear]]);
+            result.done(function(data){
+                let label = [], value = [];
+                let result = JSON.parse(data);
+                $.each(moment.months(),function(i,v){
+                    var a = system.searchJSON(result,0,v);
+                    if(a.length>0){
+                        label.push(a[0][0]);
+                        value.push(a[0][1]);
+                    }
+                    else{
+                        label.push(v);
+                        value.push(0);
+                    }
+                });
+                sales.linechart("#chart_yearSales canvas",label,'Sales: ',value);
+            });
+        },
+    },
+    booking:{
+        add: function() {
+            let now_date = moment(moment().format("YYYY-MM-DD")).add(1, 'day').format("YYYY-MM-DD");
+            $("#field_date").attr({"min": now_date});
+            client.add(true);
+
+            $('input.autocomplete').on('keyup', function() {
+                let data = system.ajax('../assets/harmony/Process.php?get-searchClient', $(this).val());
+                data.done(function(data) {
+                    let search = {};
+                    let result = JSON.parse(data);
+                    $.each(result, function(i, v) {
+                        search[`${v[1]} ${v[2]} ${v[3]}`] = {
+                            id: v[0],
+                            img: `../assets/images/profile/${v[4]}`
+                        };
+                    });
+
+                    $('input.autocomplete').autocomplete({
+                        data: search,
+                        limit: 20,
+                        onAutocomplete: function(val) {
+                            $("#display_clientId").html(val);
+                        },
+                        minLength: 1,
+                    });
+
+                    $('.autocomplete-content').on('click', function() {
+                        let data = $(this);
+                        console.log(data);
+                    })
+                });
+            });
+
+            $('#field_newClient').on('change', function() {
+                let isChecked = $(this)[0].checked;
+                $(".display_error").html("");
+                if (isChecked) {
+                    $("#display_field_oldClientName").addClass('hide');
+                    $('.collapsible').collapsible('open', 0);
+                    client.add(true);
+                } else {
+                    $("#display_field_oldClientName").removeClass('hide');
+                    $('.collapsible').collapsible('close', 0);
+                    client.add(false);
+                }
+            })
+        },
+        get: function(data) {
+            var data = system.ajax('../assets/harmony/Process.php?get-bookingByRM', [data]);
+            return data.responseText;
+        },
+        list: function() {
+            let rm_data = account_rm.id();
+            let result = JSON.parse(this.get(rm_data));
+            let data = [];
+
+            $.each(result,function(i,v){
+                data.push({title:`${v[4]} ${v[5]} -Call: ${v[6]}, Place: ${v[3]} `, start:`${v[1]}T${v[2]}`, data:v});
+            })
+
+            this.calendar(data);
+        },
+        calendar: function(data) {
+            $('#calendar').fullCalendar({
+                header: {
+                    left: 'prev, next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay,listMonth'
+                },
+                navLinks: true,
+                editable: false,
+                eventSources: [{
+                    events: data,
+                    color: '#1a237e',
+                    textColor: '#fff',
+                }],
+                // eventClick: function(calEvent, jsEvent, view) {
+                //     let now = moment().format('YYYY-MM-DD');
+                //     console.log(now);
+                //     console.log();
+                //     let control = (now ==  calEvent.data[1])?'':'disabled';
+                //     let content = `
+                //         <h6>Customer Meeting</h6>
+                //         <table>
+                //             <tr>
+                //                 <td class='bold'>Name: </td>
+                //                 <td>${calEvent.data[4]} ${calEvent.data[5]}</td>
+                //             </tr>
+                //             <tr>
+                //                 <td class='bold'>Date and Time: </td>
+                //                 <td>${calEvent.data[1]} ${calEvent.data[2]}</td>
+                //             </tr>
+                //             <tr>
+                //                 <td class='bold'>Place: </td>
+                //                 <td>${calEvent.data[3]}</td>
+                //             </tr>
+                //             <tr>
+                //                 <td class='bold'>Contact: </td>
+                //                 <td>${calEvent.data[6]}</td>
+                //             </tr>
+                //             <tr>
+                //                 <td colspan='2'>
+                //                     <a href='' class='btn left indigo darken-5 z-depth-0 waves-effect waves-light round-button'>Set a plan</a>
+                //                     <a href='#cmd=index;content=_account_client;${calEvent.data[0]}' class='right'>View account</a>
+                //                 </td>
+                //             </tr>
+                //         </table>
+                //     `;
+
+                //     $("#modal_confirm .modal-content").html(content);
+                //     $('#modal_confirm .modal-footer').remove();         
+
+                //     $('#modal_confirm').modal('open');
+                //     // alert('Meeting with: ' + calEvent.title);
+                //     // console.log(calEvent.id);
+                // }
+            })
+        },
+        getTodaysAppointment:function(){
+            let rm_data = account_rm.id();
+            var data = system.ajax('../assets/harmony/Process.php?get-bookingByRMToday',[rm_data,moment().format('YYYY-MM-DD')]);
+            data.done(function(data){
+                let result = JSON.parse(data);
+                if(result.length>0){
+                    let content = '';
+                    $.each(result,function(i,v){
+                        content += `<tr>
+                            <td width='20%' style='vertical-align: top;'>
+                                <img src="../assets/images/profile/avatar.png" class="circle left" width="35px">
+                            </td>   
+                            <td width='80%'>
+                                <span class="bold"> ${v[4]} ${v[5]}</span>
+                                <div> Call: ${v[6]}</div>
+                                <div> Time: ${v[2]}</div>
+                                <div> Meet at: ${v[3]}</div>
+                                    <a href='' class='btn indigo darken-5 z-depth-0 waves-effect waves-light round-button'>Set a plan</a>
+                                    <a href='#cmd=index;content=_account_client;${v[0]}' class=''>View account</a>                          
+                            </td>
+                        </tr>`;
+                    });
+                    $("#display_rm_appointment table").html(content);                   
+                }
+                else{
+                    $("#display_rm_appointment").html('<h6>You have no appointment today.</h6>');
+                }
+            });
+        }
     }
 }

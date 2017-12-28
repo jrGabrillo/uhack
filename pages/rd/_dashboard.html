@@ -1,82 +1,9 @@
 <div class="section">
 	<div class="row">
 		<div class="col s12">
-			<h5>Sales</h5>
+			<h5>Your RM's Schedule</h5>
 			<div class="chart-container">
 				<canvas id="chart_sales"></canvas>
-			</div>
-		</div>
-		<div class="col s12">
-			<div class="divider" style="margin-top: 20px;"></div>
-			<div class="col s4" id='display_notifications' style="border-right: solid 1px #ccc;">
-				<h6>Notifications</h6>
-				<div class="chip truncate">
-					<img src="../assets/images/profile/avatar.png"> <span>Renzie Chan</span> made 200,000 sales
-				</div>
-				<div class="chip truncate">
-					<img src="../assets/images/profile/avatar.png"> <span>Rey</span> messaged you
-				</div>
-				<div class="chip truncate">
-					<img src="../assets/images/profile/avatar.png"> <span>Jake</span> has been promoted
-				</div>
-				<div class="chip truncate">
-					<img src="../assets/images/profile/avatar.png"> <span>Jonathan</span> messaged you
-				</div>
-			</div>
-			<div class="col s8">
-				<h6>Regional Manager</h6>
-				<div id='display_rm'>
-					<table class="bordered">
-						<tr>
-							<td width="60%">
-								<img src="../assets/images/profile/avatar.png" class="circle left" width="35px">
-								<span class=""> Juan Dela Cruz</span>
-							</td>
-							<td width="30%">
-								<span><i class="material-icons orange-text">fiber_manual_record</i></span>
-							</td>
-							<td width="10%">
-								<a class="waves-effect waves-orange orange-text" href="#cmd=index;content=account"><i class="material-icons grey-text">chevron_right</i></a>
-							</td>
-						</tr>
-						<tr>
-							<td width="60%">
-								<img src="../assets/images/profile/avatar.png" class="circle left" width="35px">
-								<span class=""> Jake Ramos</span>
-							</td>
-							<td width="30%">
-								<span><i class="material-icons orange-text">fiber_manual_record</i></span>
-							</td>
-							<td width="10%">
-								<a class="waves-effect waves-orange orange-text" href="#cmd=index;content=account"><i class="material-icons grey-text">chevron_right</i></a>
-							</td>
-						</tr>
-						<tr>
-							<td width="60%">
-								<img src="../assets/images/profile/avatar.png" class="circle left" width="35px">
-								<span class=""> Jessica Perez</span>
-							</td>
-							<td width="30%">
-								<span><i class="material-icons grey-text">fiber_manual_record</i></span>
-							</td>
-							<td width="10%">
-								<a class="waves-effect waves-orange orange-text" href="#cmd=index;content=account"><i class="material-icons grey-text">chevron_right</i></a>
-							</td>
-						</tr>
-						<tr>
-							<td width="60%">
-								<img src="../assets/images/profile/avatar.png" class="circle left" width="35px">
-								<span class=""> Chi Guevara</span>
-							</td>
-							<td width="30%">
-								<span><i class="material-icons orange-text">fiber_manual_record</i></span>
-							</td>
-							<td width="10%">
-								<a class="waves-effect waves-orange orange-text" href="#cmd=index;content=account"><i class="material-icons grey-text">chevron_right</i></a>
-							</td>
-						</tr>
-					</table>
-				</div>
 			</div>
 		</div>
 	</div>
@@ -84,4 +11,19 @@
 <script type="text/javascript">
 	sales.linechart();
     $('.tooltipped').tooltip({delay: 50});
+
+        let branch_id = JSON.parse(account.get());
+        var data = system.ajax('../assets/harmony/Process.php?get-listAccountRMByRD',branch_id[0][15]);
+        data.done(function(data){
+            let result = JSON.parse(data);
+            let content = "";
+
+            $.each(result,function(i,v){
+
+            });
+        	console.log(result);
+        });
+
+
+
 </script>

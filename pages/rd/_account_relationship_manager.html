@@ -2,15 +2,71 @@
 	<div class="row">
 		<div id="display_details">
 			<div class="col s12 m12 l12 account"></div>
-			<div class="col s12 m12 l12">
-				<canvas id="rm_sales"></canvas>
+		</div>
+	</div>
+	<div id="calendar" class="fc fc-ltr fc-unthemed"></div>
+	<div class="row" id="display_listSale"></div>
+	<div class="row">
+		<div class="col s12">
+			<h5>Sales</h5>
+		</div>
+		<div class="col s12 m6 l6">
+			<div class="collection">
+				<div class="card-title">
+					Today's Sale
+				</div>
+				<div id="chart_todaySales"><canvas></canvas></div>
+			</div>
+		</div>
+		<div class="col s12 m6 l6">
+			<div class="collection">
+				<div class="card-title">
+					This Week's Sale
+				</div>
+				<div id="chart_weekSales"><canvas></canvas></div>
+			</div>
+		</div>
+		<div class="col s12 m6 l6">
+			<div class="collection">
+				<div class="card-title">
+					This Month's Sale
+				</div>
+				<div id="chart_monthSales"><canvas></canvas></div>
+			</div>
+		</div>
+		<div class="col s12 m6 l6">
+			<div class="collection">
+				<div class="card-title">
+					This Year's Sale
+				</div>
+				<div id="chart_yearSales"><canvas></canvas></div>
+			</div>
+		</div>
+		<div class="col s12">
+			<div class="collection">
+				<div class="chart-container">
+					<form id='form_registerClient' class='formValidate' method='get' action='' novalidate='novalidate'>
+						<div class='input-field col s10 m5 l5'>
+							<label for='field_dateFrom' class="active">From: </label>
+				            <input id='field_dateFrom' type='date' name='field_dateFrom' data-error='.error_dateFrom'>
+							<div class='display_error error_dateFrom'></div>	
+						</div>
+						<div class='input-field col s10 m5 l5'>
+							<label for='field_dateTo' class="active">To: </label>
+				            <input id='field_dateTo' type='date' name='field_dateTo' data-error='.error_dateTo'>
+							<div class='display_error error_dateTo'></div>	
+						</div>
+					</form>
+					<canvas id="chart_sales"></canvas>
+				</div>
 			</div>
 		</div>
 	</div>
-	<div class="row" id="display_listSale"></div>
 </div>
 <script type="text/javascript">
 	relationshipManager.display();
+	account_rm.sales.ini();
+	account_rm.booking.list();
 	$('select').material_select();
 	$('.collapsible').collapsible();
     $('.tooltipped').tooltip({delay: 50});
